@@ -3,27 +3,29 @@
 
 ~~~
 {}{img_left}{pic.jpg}{Lei M. Zhang}{250}{300}{}
-*PhD Candidate*\n
+*PhD *\n
 
-*Affiliation*: Communications Group, Dept of ECE\n
+*Affiliation*: Communications Group, Department of ECE\n
 University of Toronto
 
 *Advisor*: [http://www.comm.utoronto.ca/frank/ Prof. Frank R. Kschischang]
 
 *Email*: leizhang (at) comm (dot) utoronto (dot) ca
 
-*Curriculum Vitae*: [CV_Lei_Zhang.pdf]
+*Curriculum Vitae*: [cv.pdf]
 ~~~
 
 == About me
-I'm a Ph.D. student in Communication group at University of Toronto, under the supervision of Professor Frank R. Kschischang. I completed my M.Sc. degree under the supervision of Professor Kschischang as well. Before coming to University of Toronto, I studied at University of Waterloo as undergraduate student in Electrical Engineering.
+I recently completed my PhD at the University of Toronto ECE department, supervised by Prof Frank Kschischang. My research focused on coding and information theory, in particular, on inferencing algorithm design for high-speed optical-fiber communication systems.  
 
-== Publications
+== Select Publications
 . Zhang L. M., and Kschischang F. R., "Staircase Codes With 6\% to 33\% Overhead," Journal of
 Lightwave Technology. vol. 32, no. 10, pp. 1999-2002, May 2014.\n
+
 [http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6787025  Link:\[10.1109\/JLT.2014.2316732\]]\n\n
 . Zhang L. M., and Kschischang F. R., "Multi-edge-type Low-density Parity-check Codes for Bandwidth-
 efficient Modulation," IEEE Transactions on Communications, vol. 61, no. 1, pp. 43-52, Jan. 2013.\n
+
 [http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6334510  Link:\[10.1109\/TCOMM.2012.100512.120006\]]\n\n
 . Zhang L. M., and Kschischang F. R., "Design of multi-edge-type LDPC codes for high-order coded modulation," Information Theory (CWIT), 2011 12th Canadian Workshop on, pp. 5-8, May 2011.\n
 [http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=5872111  Link:\[10.1109\/CWIT.2011.5872111\]]\n\n
@@ -34,15 +36,13 @@ efficient Modulation," IEEE Transactions on Communications, vol. 61, no. 1, pp. 
 - ECE316 : Introduction to Communication Systems
 - ECE417 : Digital Communications
 
-== Courses 
-- ECE1500 : Stochastic Processes
-- ECE1502 : Information Theory
-- ECE1520 : Data Communications
-- ECE1521 : Statistical Communication Theory
-- ECE1543 : Mobile Communication Systems
+== Select Courses 
+- STA2104 : Machine Learning and Data Mining
 - ECE1505 : Convex Optimization
-- ECE1508 : Special Topics in Communications
+- ECE1500 : Probability and Stochastic Processes
+- CSC2410 : Graph Theory
+- ECE1502 : Information Theory
+- ECE1508 : Multi-User Information Theory 
+- ECE1521 : Statistical Communication Theory
 - ECE1501 : Error Control Codes
-- CSC2410 : Introduction to Graph Theory
-- STA2104 : Statistical Methods for Machine Learning and Data Mining
 
