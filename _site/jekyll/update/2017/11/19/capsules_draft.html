@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Capsule Network</title>
+  <meta name="description" content="In this post, I discuss the paper Dynamic Routing Between Capsules (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. Let’s start with the two main ideas fr...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/jekyll/update/2017/11/19/capsules_draft.html">
+  <link rel="alternate" type="application/rss+xml" title="Lei M. Zhang&#39;s Research Blog" href="/feed.xml">
+  
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Lei M. Zhang&#39;s Research Blog</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Capsule Network</h1>
+    <p class="post-meta">
+      <time datetime="2017-11-19T16:35:00-05:00" itemprop="datePublished">
+        
+        Nov 19, 2017
+      </time>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In this post, I discuss the paper <a href="https://arxiv.org/abs/1710.09829">Dynamic Routing Between Capsules</a> (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. Let’s start with the two main ideas from the paper: <strong>capsules</strong> and <strong>dynamic routing</strong>.</p>
+
+<h2 id="what-are-capsules">What are Capsules?</h2>
+
+<p>A capsule is a generalization of a scalar neuron to a vector.</p>
+
+<p>Let <script type="math/tex">N</script> be the number of inputs to a standard neuron. Let the set <script type="math/tex">\mathcal{I} \triangleq \{0, \dots, N-1\}</script> be an index set of the inputs <script type="math/tex">x_i \in \mathbb{R}</script> and input weights <script type="math/tex">w_i \in \mathbb{R}</script> for <script type="math/tex">i \in \mathcal{I}</script>, then the output <script type="math/tex">y \in \mathbb{R}</script> of a standard neuron is given by</p>
+
+<script type="math/tex; mode=display">\begin{equation}\label{eqn:neuron}
+y = f\left( \sum_{i \in \mathcal{I}} w_i x_i \right) 
+\end{equation}</script>
+
+<p>where <script type="math/tex">f: \mathbb{R} \mapsto \mathbb{R}</script> is a non-linear function such as sigmoid or ReLU.</p>
+
+<p>We use the notation <script type="math/tex">\mathbf{x} \triangleq (x_0, \dots, x_{d-1})</script> to denote a <script type="math/tex">d</script>-tuple. If the <script type="math/tex">d</script>-tuple is an element of a <script type="math/tex">d</script>-dimensional vector space, then <script type="math/tex">\mathbf{x}</script> is referred to as a (row) vector. We denote the 2-norm of <script type="math/tex">\mathbf{x}</script> by <script type="math/tex">\|\mathbf{x}\|</script>.</p>
+
+<p>There are two types of capsules in the capsule network for the MNIST dataset given in CapsNet17. <strong>Primary capsules</strong> are intended to represent local features. <strong>Digit capsules</strong> are intended to represent the digit. Let us first focus on digit capsules.</p>
+
+<p>Here, assume that an arbitrary digit capsule, <script type="math/tex">\mathbf{v}</script>, has the same number of inputs, <script type="math/tex">N</script>, as the above neuron. Let <script type="math/tex">\mathbf{u}_i</script> for <script type="math/tex">i \in \mathcal{I}</script> be all of the primary capsules that are possible inputs to <script type="math/tex">\mathbf{v}</script>. We assume that <script type="math/tex">\mathbf{u}_i</script> and <script type="math/tex">\mathbf{v}</script> are elements in vector spaces <script type="math/tex">\mathbb{R}^{d_u}</script> and <script type="math/tex">\mathbb{R}^{d_v}</script>, where <script type="math/tex">d_u \neq d_v</script>, in general.</p>
+
+<p>Assume that we know the set of <script type="math/tex">c_i</script> for <script type="math/tex">i \in \mathcal{I}</script>. These are routing coefficients that is determined by the dynamic routing algorithm (see next section). To define a similar expression as (<script type="math/tex">\ref{eqn:neuron}</script>) for capsules, we need to redefine <script type="math/tex">w_i</script> and <script type="math/tex">f</script>.</p>
+
+<p>One simple solution is to replace each <script type="math/tex">w_i</script> by a matrix of dimension <script type="math/tex">d_u \times d_v</script>, <script type="math/tex">W_i</script>. Then, replace <script type="math/tex">f</script> by a non-linear, vector-input scalar-ouput function. In CapsNet17, this function is given by</p>
+
+<script type="math/tex; mode=display">\begin{equation*}
+g(\mathbf{x}) = \left(1 - \frac{1}{1 + \|\mathbf{x}\|^2}\right) \frac{\mathbf{x}}{\|\mathbf{x}\|}.
+\end{equation*}</script>
+
+<p>Finally, we arrive at the expression for an arbitrary digit capsule</p>
+
+<script type="math/tex; mode=display">\begin{equation}\label{eqn:capsule}
+\mathbf{v} = g\left(\sum_{i \in \mathcal{I}} c_i \mathbf{u}_i W_i\right).
+\end{equation}</script>
+
+<p>It is no surprise that (<script type="math/tex">\ref{eqn:capsule}</script>) is similar to (<script type="math/tex">\ref{eqn:neuron}</script>). Since, as we mentioned, a capsule is really a generalization of a neuron to a vector.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>From this perspective, the idea of capsules appears to be a straightforward generalization of the scalar neuron. Are there any good reasons for doing so?</p>
+
+<p>From CapsNet17 and an <a href="http://www.cs.toronto.edu/~fritz/absps/transauto6.pdf">earlier work</a> by Prof Hinton, there appear to be two reasons for thinking about vectors rather than scalars.</p>
+
+<p>First, the pooling operation in convolutional neural networks, as a way of obtaining higher-level representations from filter outputs, is sub-optimal:</p>
+
+<p>The max operation could remove information (i.e., filter outputs that are less than the maximum). Primary capsules attempt to capture a similar higher-level representation <strong>without loss of information</strong> from convolution filter outputs. By simply aggregating groups of filter outputs into a capsule (a vector), all of the information is captured by different characteristics of the vector. For example, given a capsule <script type="math/tex">\mathbf{x}</script>, <script type="math/tex">\| \mathbf{x} \|</script> is considered to be the probability that the feature represented by <script type="math/tex">\mathbf{x}</script> is present in the input image.</p>
+
+<p>Second, capsules can retain more information about affine transformations of a feature than CNNs with pooling:</p>
+
+<p>CNNs with max pooling is well-known to be translation . Translation is a type of affine transformation. In general, however, an affine transformation is simply as linear map between two vector spaces. In the case where the vector spaces are the same, for example, <script type="math/tex">\mathbb{R}^d</script> and a vector is a value of a capsule <script type="math/tex">\mathbf{x} \in \mathbb{R}^d</script>, then any affine transformation <script type="math/tex">T : \mathbb{R}^d \mapsto \mathbb{R}^d</script> with</p>
+
+<script type="math/tex; mode=display">T(\mathbf{x}) = A\mathbf{x} + \mathbf{b}</script>
+
+<p>simply maps between different values of the capsule.</p>
+
+<h2 id="what-is-dynamic-routing">What is dynamic routing?</h2>
+
+<p>The idea of dynamic routing introduced in CapsNet17 is, in my opinion, the most interest part of the work. It provides a way of connecting capsules between the primary and digit layers <strong>without using back-propagation</strong>.</p>
+
+<p>What it uses is essentially the correlation between different capsule outputs. Recall that each primary capsule <script type="math/tex">\mathbf{u}_i</script> is first multiplied (on the right) by the matrix <script type="math/tex">W_i</script>. Denote this <script type="math/tex">d_v</script>-dimensional vector by <script type="math/tex">\hat{\mathbf{u}}_i</script>. The algorithm then calculates</p>
+
+<script type="math/tex; mode=display">\hat{\mathbf{u}}_i \mathbf{v}^T</script>
+
+<p>to update the routing coefficients. Since the calculation of <script type="math/tex">c_i</script> is now recursive, the dynamic routing algorithm is performed for a number of iterations.</p>
+
+<p>Since <script type="math/tex">g</script> essentially limits the norm of both vectors to less than or equal to 1, the above project is a measure of how closely matched the two vectors are in <strong>orientation</strong>.</p>
+
+<p>As shown, the algorithm does not explicitly use back-propagation to find the routing coefficients. However, back-propagation is used to optimize the  parameters involved in the routing calculations. In particular, <script type="math/tex">W_i</script>.</p>
+
+<h2 id="my-implementation">My Implementation</h2>
+
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+  </script>
+  
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Lei M. Zhang&#39;s Research Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              Lei M. Zhang&#39;s Research Blog
+            
+            </li>
+            
+            <li><a href="mailto:leiz86+blog@gmail.com">leiz86+blog@gmail.com</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/leiz86"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">leiz86</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>This is the research blog of Lei M. Zhang, PhD (ECE, U of Toronto).  Topics include deep learning, variational inference, graphical models,  information theory and coding theory. Enjoy!</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
