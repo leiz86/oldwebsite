@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Capsule Network"
-date:   2017-11-19 16:35:00 -0500 
+title: "Capsule Networks"
+date:   2017-11-22 22:16:00 -0500 
 categories: jekyll update
 ---
 
@@ -29,7 +29,7 @@ Here, assume that an arbitrary digit capsule, $$\mathbf{v}$$, has the same numbe
 
 Assume that we know the set of $$ c_i $$ for $$i \in \mathcal{I}$$. These are routing coefficients that is determined by the dynamic routing algorithm (see next section). To define a similar expression as ($$\ref{eqn:neuron}$$) for capsules, we need to redefine $$w_i$$ and $$f$$. 
 
-One simple solution is to replace each $$w_i$$ by a matrix of dimension $$d_u \times d_v$$, $$W_i$$. Then, replace $$f$$ by a non-linear, vector-input scalar-ouput function. In CapsNet17, this function is given by
+One simple solution is to replace each $$w_i$$ by a matrix of dimension $$d_u \times d_v$$, $$W_i$$. Then, replace $$f$$ by a non-linear, vector-input scalar-output function. In CapsNet17, this function is given by
 
 $$
 \begin{equation*}
@@ -53,7 +53,7 @@ From this perspective, the idea of capsules appears to be a straightforward gene
 
 From CapsNet17 and an [earlier work](http://www.cs.toronto.edu/~fritz/absps/transauto6.pdf) by Prof Hinton, there appear to be two reasons for thinking about vectors rather than scalars.
 
-First, the pooling operation in convolutional neural networks, as a way of obtaining higher-level representations from filter outputs, is sub-optimal: 
+First, the pooling operation in convolutional neural networks (CNNs), as a way of obtaining higher-level representations from filter outputs, is sub-optimal: 
 
 The max operation could remove information (i.e., filter outputs that are less than the maximum). Primary capsules attempt to capture a similar higher-level representation **without loss of information** from convolution filter outputs. By simply aggregating groups of filter outputs into a capsule (a vector), all of the information is captured by different characteristics of the vector. For example, given a capsule $$\mathbf{x}$$, $$\| \mathbf{x} \|$$ is considered to be the probability that the feature represented by $$\mathbf{x}$$ is present in the input image. 
 
@@ -81,7 +81,22 @@ Since $$g$$ essentially limits the norm of both vectors to less than or equal to
 
 As shown, the algorithm does not explicitly use back-propagation to find the routing coefficients. However, back-propagation is used to optimize the  parameters involved in the routing calculations. In particular, $$W_i$$.
 
-## My Implementation
+## Implementation
 
+I have written a simple Tensorflow implementation of the MNIST capsule network as described in CapsNet17, located at my [GitHub](https://github.com/leiz86/capsules-network). 
 
+My implementation was based on the excellent Tensorflow implementations of capsule networks [here](https://github.com/naturomics/CapsNet-Tensorflow) and [here](https://github.com/InnerPeace-Wu/CapsNet-tensorflow).
 
+Due to the lack of computing resources, I have not yet been able to fully train my implementation to verify the performance reported in CapsNet17.
+
+## Final Comments
+
+CapsNet17 offers a number of interesting ideas, in particular the generalization of scalar neurons to vector neurons and an alternative way of making layer connections. It appears to be more robust to affine transformations in the original image, rather than just translations.
+
+The authors do not delve into their choice of network architecture, which leaves me with a some immediate questions. For example, why are the dimensions 8 and 16 used for primary and digit capsules, respectively? Can they both be 8-dimensional vectors? Can the weight matrix be simplified to the identity matrix (or $$w_i * I$$) in this case?
+
+The fact that there is 1 digit capsule for each output class also needs a bit more elaboration. I believe that this is a consequence of the additional mask-and-reconstruction used to regularize the MNIST training. 
+
+This shouldn't be necessary, however, since the set of digit capsules can be encoded. In this case, only $$\lceil \log_2(10) \rceil$$ output capsules are necessary. Indeed, if capsules are indeed more efficient than CNNs with pooling, then they should not be used in a one-hot manner in any layer. 
+
+Plenty of fun future experiments with capsules!

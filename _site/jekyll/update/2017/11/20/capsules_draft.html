@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Capsule Network</title>
+  <title>Capsule Networks</title>
   <meta name="description" content="In this post, I discuss the paper Dynamic Routing Between Capsules (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. Let’s start with the two main ideas fr...">
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="http://localhost:4000/jekyll/update/2017/11/19/capsules_draft.html">
+  <link rel="canonical" href="http://localhost:4000/jekyll/update/2017/11/20/capsules_draft.html">
   <link rel="alternate" type="application/rss+xml" title="Lei M. Zhang&#39;s Research Blog" href="/feed.xml">
   
   
@@ -70,11 +70,11 @@
         <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">Capsule Network</h1>
+    <h1 class="post-title" itemprop="name headline">Capsule Networks</h1>
     <p class="post-meta">
-      <time datetime="2017-11-19T16:35:00-05:00" itemprop="datePublished">
+      <time datetime="2017-11-20T00:00:00-05:00" itemprop="datePublished">
         
-        Nov 19, 2017
+        Nov 20, 2017
       </time>
       </p>
   </header>
@@ -102,7 +102,7 @@ y = f\left( \sum_{i \in \mathcal{I}} w_i x_i \right)
 
 <p>Assume that we know the set of <script type="math/tex">c_i</script> for <script type="math/tex">i \in \mathcal{I}</script>. These are routing coefficients that is determined by the dynamic routing algorithm (see next section). To define a similar expression as (<script type="math/tex">\ref{eqn:neuron}</script>) for capsules, we need to redefine <script type="math/tex">w_i</script> and <script type="math/tex">f</script>.</p>
 
-<p>One simple solution is to replace each <script type="math/tex">w_i</script> by a matrix of dimension <script type="math/tex">d_u \times d_v</script>, <script type="math/tex">W_i</script>. Then, replace <script type="math/tex">f</script> by a non-linear, vector-input scalar-ouput function. In CapsNet17, this function is given by</p>
+<p>One simple solution is to replace each <script type="math/tex">w_i</script> by a matrix of dimension <script type="math/tex">d_u \times d_v</script>, <script type="math/tex">W_i</script>. Then, replace <script type="math/tex">f</script> by a non-linear, vector-input scalar-output function. In CapsNet17, this function is given by</p>
 
 <script type="math/tex; mode=display">\begin{equation*}
 g(\mathbf{x}) = \left(1 - \frac{1}{1 + \|\mathbf{x}\|^2}\right) \frac{\mathbf{x}}{\|\mathbf{x}\|}.
@@ -122,7 +122,7 @@ g(\mathbf{x}) = \left(1 - \frac{1}{1 + \|\mathbf{x}\|^2}\right) \frac{\mathbf{x}
 
 <p>From CapsNet17 and an <a href="http://www.cs.toronto.edu/~fritz/absps/transauto6.pdf">earlier work</a> by Prof Hinton, there appear to be two reasons for thinking about vectors rather than scalars.</p>
 
-<p>First, the pooling operation in convolutional neural networks, as a way of obtaining higher-level representations from filter outputs, is sub-optimal:</p>
+<p>First, the pooling operation in convolutional neural networks (CNNs), as a way of obtaining higher-level representations from filter outputs, is sub-optimal:</p>
 
 <p>The max operation could remove information (i.e., filter outputs that are less than the maximum). Primary capsules attempt to capture a similar higher-level representation <strong>without loss of information</strong> from convolution filter outputs. By simply aggregating groups of filter outputs into a capsule (a vector), all of the information is captured by different characteristics of the vector. For example, given a capsule <script type="math/tex">\mathbf{x}</script>, <script type="math/tex">\| \mathbf{x} \|</script> is considered to be the probability that the feature represented by <script type="math/tex">\mathbf{x}</script> is present in the input image.</p>
 
@@ -148,8 +148,25 @@ g(\mathbf{x}) = \left(1 - \frac{1}{1 + \|\mathbf{x}\|^2}\right) \frac{\mathbf{x}
 
 <p>As shown, the algorithm does not explicitly use back-propagation to find the routing coefficients. However, back-propagation is used to optimize the  parameters involved in the routing calculations. In particular, <script type="math/tex">W_i</script>.</p>
 
-<h2 id="my-implementation">My Implementation</h2>
+<h2 id="implementation">Implementation</h2>
 
+<p>I have written a simple Tensorflow implementation of the MNIST capsule network as described in CapsNet17, located at my <a href="https://github.com/leiz86/capsules-network">GitHub</a>.</p>
+
+<p>My implementation was based on the excellent Tensorflow implementations of capsule networks <a href="https://github.com/naturomics/CapsNet-Tensorflow">here</a> and <a href="https://github.com/InnerPeace-Wu/CapsNet-tensorflow">here</a>.</p>
+
+<p>Due to the lack of computing resources, I have not yet been able to fully train my implementation to verify the performance reported in CapsNet17.</p>
+
+<h2 id="final-comments">Final Comments</h2>
+
+<p>CapsNet17 offers a number of interesting ideas, in particular the generalization of scalar neurons to vector neurons and an alternative way of making layer connections. It appears to be more robust to affine transformations in the original image, rather than just translations.</p>
+
+<p>The authors do not delve into their choice of network architecture, which leaves me with a some immediate questions. For example, why are the dimensions 8 and 16 used for primary and digit capsules, respectively? Can they both be 8-dimensional vectors? Can the weight matrix be simplified to the identity matrix (or <script type="math/tex">w_i * I</script>) in this case?</p>
+
+<p>The fact that there is 1 digit capsule for each output class also needs a bit more elaboration. I believe that this is a consequence of the additional mask-and-reconstruction used to regularize the MNIST training.</p>
+
+<p>This shouldn’t be necessary, however, since the set of digit capsules can be encoded. In this case, only <script type="math/tex">\lceil \log_2(10) \rceil</script> output capsules are necessary. Indeed, if capsules are indeed more efficient than CNNs with pooling, then they should not be used in a one-hot manner in any layer.</p>
+
+<p>Plenty of fun future experiments with capsules!</p>
 
   </div>
 
