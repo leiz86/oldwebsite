@@ -1,3 +1,93 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-11-22T22:13:20-05:00</updated><id>http://localhost:4000/</id><title type="html">Lei M. Zhang’s Research Blog</title><subtitle>This is the research blog of Lei M. Zhang, PhD (ECE, U of Toronto).  Topics include deep learning, variational inference, graphical models,  information theory and coding theory. Enjoy!</subtitle><entry><title type="html">First Post!</title><link href="http://localhost:4000/jekyll/update/2017/11/19/first-post.html" rel="alternate" type="text/html" title="First Post!" /><published>2017-11-19T10:19:55-05:00</published><updated>2017-11-19T10:19:55-05:00</updated><id>http://localhost:4000/jekyll/update/2017/11/19/first-post</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/11/19/first-post.html">&lt;p&gt;In this blog, I hope to provide clear and concise explanations of interesting research topics in deep learning. I will mostly be writing in the research paper style that I picked up during my PhD time at UofT. For some samples of such writing, please take a look at the links in the About section.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-11-22T22:39:51-05:00</updated><id>http://localhost:4000/</id><title type="html">Lei M. Zhang’s Research Blog</title><subtitle>This is the research blog of Lei M. Zhang, PhD (ECE, U of Toronto).  Topics include deep learning, variational inference, graphical models,  information theory and coding theory. Enjoy!</subtitle><entry><title type="html">Capsule Networks</title><link href="http://localhost:4000/jekyll/update/2017/11/22/capsules.html" rel="alternate" type="text/html" title="Capsule Networks" /><published>2017-11-22T22:16:00-05:00</published><updated>2017-11-22T22:16:00-05:00</updated><id>http://localhost:4000/jekyll/update/2017/11/22/capsules</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/11/22/capsules.html">&lt;p&gt;In this post, I discuss the paper &lt;a href=&quot;https://arxiv.org/abs/1710.09829&quot;&gt;Dynamic Routing Between Capsules&lt;/a&gt; (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. For a simple Tensorflow implementation, please see my  &lt;a href=&quot;https://github.com/leiz86/capsules-network&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let’s start with the two main ideas from the paper: &lt;strong&gt;capsules&lt;/strong&gt; and &lt;strong&gt;dynamic routing&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-are-capsules&quot;&gt;What are Capsules?&lt;/h2&gt;
+
+&lt;p&gt;A capsule is a generalization of a scalar neuron to a vector.&lt;/p&gt;
+
+&lt;p&gt;Let &lt;script type=&quot;math/tex&quot;&gt;N&lt;/script&gt; be the number of inputs to a standard neuron. Let the set &lt;script type=&quot;math/tex&quot;&gt;\mathcal{I} \triangleq \{0, \dots, N-1\}&lt;/script&gt; be an index set of the inputs &lt;script type=&quot;math/tex&quot;&gt;x_i \in \mathbb{R}&lt;/script&gt; and input weights &lt;script type=&quot;math/tex&quot;&gt;w_i \in \mathbb{R}&lt;/script&gt; for &lt;script type=&quot;math/tex&quot;&gt;i \in \mathcal{I}&lt;/script&gt;, then the output &lt;script type=&quot;math/tex&quot;&gt;y \in \mathbb{R}&lt;/script&gt; of a standard neuron is given by&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation}\label{eqn:neuron}
+y = f\left( \sum_{i \in \mathcal{I}} w_i x_i \right) 
+\end{equation}&lt;/script&gt;
+
+&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;f: \mathbb{R} \mapsto \mathbb{R}&lt;/script&gt; is a non-linear function such as sigmoid or ReLU.&lt;/p&gt;
+
+&lt;p&gt;We use the notation &lt;script type=&quot;math/tex&quot;&gt;\mathbf{x} \triangleq (x_0, \dots, x_{d-1})&lt;/script&gt; to denote a &lt;script type=&quot;math/tex&quot;&gt;d&lt;/script&gt;-tuple. If the &lt;script type=&quot;math/tex&quot;&gt;d&lt;/script&gt;-tuple is an element of a &lt;script type=&quot;math/tex&quot;&gt;d&lt;/script&gt;-dimensional vector space, then &lt;script type=&quot;math/tex&quot;&gt;\mathbf{x}&lt;/script&gt; is referred to as a (row) vector. We denote the 2-norm of &lt;script type=&quot;math/tex&quot;&gt;\mathbf{x}&lt;/script&gt; by &lt;script type=&quot;math/tex&quot;&gt;\|\mathbf{x}\|&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;There are two types of capsules in the capsule network for the MNIST dataset given in CapsNet17. &lt;strong&gt;Primary capsules&lt;/strong&gt; are intended to represent local features. &lt;strong&gt;Digit capsules&lt;/strong&gt; are intended to represent the digit. Let us first focus on digit capsules.&lt;/p&gt;
+
+&lt;p&gt;Here, assume that an arbitrary digit capsule, &lt;script type=&quot;math/tex&quot;&gt;\mathbf{v}&lt;/script&gt;, has the same number of inputs, &lt;script type=&quot;math/tex&quot;&gt;N&lt;/script&gt;, as the above neuron. Let &lt;script type=&quot;math/tex&quot;&gt;\mathbf{u}_i&lt;/script&gt; for &lt;script type=&quot;math/tex&quot;&gt;i \in \mathcal{I}&lt;/script&gt; be all of the primary capsules that are possible inputs to &lt;script type=&quot;math/tex&quot;&gt;\mathbf{v}&lt;/script&gt;. We assume that &lt;script type=&quot;math/tex&quot;&gt;\mathbf{u}_i&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\mathbf{v}&lt;/script&gt; are elements in vector spaces &lt;script type=&quot;math/tex&quot;&gt;\mathbb{R}^{d_u}&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\mathbb{R}^{d_v}&lt;/script&gt;, where &lt;script type=&quot;math/tex&quot;&gt;d_u \neq d_v&lt;/script&gt;, in general.&lt;/p&gt;
+
+&lt;p&gt;Assume that we know the set of &lt;script type=&quot;math/tex&quot;&gt;c_i&lt;/script&gt; for &lt;script type=&quot;math/tex&quot;&gt;i \in \mathcal{I}&lt;/script&gt;. These are routing coefficients that is determined by the dynamic routing algorithm (see next section). To define a similar expression as (&lt;script type=&quot;math/tex&quot;&gt;\ref{eqn:neuron}&lt;/script&gt;) for capsules, we need to redefine &lt;script type=&quot;math/tex&quot;&gt;w_i&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;One simple solution is to replace each &lt;script type=&quot;math/tex&quot;&gt;w_i&lt;/script&gt; by a matrix of dimension &lt;script type=&quot;math/tex&quot;&gt;d_u \times d_v&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;W_i&lt;/script&gt;. Then, replace &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt; by a non-linear, vector-input scalar-output function. In CapsNet17, this function is given by&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation*}
+g(\mathbf{x}) = \left(1 - \frac{1}{1 + \|\mathbf{x}\|^2}\right) \frac{\mathbf{x}}{\|\mathbf{x}\|}.
+\end{equation*}&lt;/script&gt;
+
+&lt;p&gt;Finally, we arrive at the expression for an arbitrary digit capsule&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation}\label{eqn:capsule}
+\mathbf{v} = g\left(\sum_{i \in \mathcal{I}} c_i \mathbf{u}_i W_i\right).
+\end{equation}&lt;/script&gt;
+
+&lt;p&gt;It is no surprise that (&lt;script type=&quot;math/tex&quot;&gt;\ref{eqn:capsule}&lt;/script&gt;) is similar to (&lt;script type=&quot;math/tex&quot;&gt;\ref{eqn:neuron}&lt;/script&gt;). Since, as we mentioned, a capsule is really a generalization of a neuron to a vector.&lt;/p&gt;
+
+&lt;h3 id=&quot;discussion&quot;&gt;Discussion&lt;/h3&gt;
+
+&lt;p&gt;From this perspective, the idea of capsules appears to be a straightforward generalization of the scalar neuron. Are there any good reasons for doing so?&lt;/p&gt;
+
+&lt;p&gt;From CapsNet17 and an &lt;a href=&quot;http://www.cs.toronto.edu/~fritz/absps/transauto6.pdf&quot;&gt;earlier work&lt;/a&gt; by Prof Hinton, there appear to be two reasons for thinking about vectors rather than scalars.&lt;/p&gt;
+
+&lt;p&gt;First, the pooling operation in convolutional neural networks (CNNs), as a way of obtaining higher-level representations from filter outputs, is sub-optimal:&lt;/p&gt;
+
+&lt;p&gt;The max operation could remove information (i.e., filter outputs that are less than the maximum). Primary capsules attempt to capture a similar higher-level representation &lt;strong&gt;without loss of information&lt;/strong&gt; from convolution filter outputs. By simply aggregating groups of filter outputs into a capsule (a vector), all of the information is captured by different characteristics of the vector. For example, given a capsule &lt;script type=&quot;math/tex&quot;&gt;\mathbf{x}&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;\| \mathbf{x} \|&lt;/script&gt; is considered to be the probability that the feature represented by &lt;script type=&quot;math/tex&quot;&gt;\mathbf{x}&lt;/script&gt; is present in the input image.&lt;/p&gt;
+
+&lt;p&gt;Second, capsules can retain more information about affine transformations of a feature than CNNs with pooling:&lt;/p&gt;
+
+&lt;p&gt;CNNs with max pooling is well-known to be translation . Translation is a type of affine transformation. In general, however, an affine transformation is simply as linear map between two vector spaces. In the case where the vector spaces are the same, for example, &lt;script type=&quot;math/tex&quot;&gt;\mathbb{R}^d&lt;/script&gt; and a vector is a value of a capsule &lt;script type=&quot;math/tex&quot;&gt;\mathbf{x} \in \mathbb{R}^d&lt;/script&gt;, then any affine transformation &lt;script type=&quot;math/tex&quot;&gt;T : \mathbb{R}^d \mapsto \mathbb{R}^d&lt;/script&gt; with&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;T(\mathbf{x}) = A\mathbf{x} + \mathbf{b}&lt;/script&gt;
+
+&lt;p&gt;simply maps between different values of the capsule.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-dynamic-routing&quot;&gt;What is dynamic routing?&lt;/h2&gt;
+
+&lt;p&gt;The idea of dynamic routing introduced in CapsNet17 is, in my opinion, the most interest part of the work. It provides a way of connecting capsules between the primary and digit layers &lt;strong&gt;without using back-propagation&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;What it uses is essentially the correlation between different capsule outputs. Recall that each primary capsule &lt;script type=&quot;math/tex&quot;&gt;\mathbf{u}_i&lt;/script&gt; is first multiplied (on the right) by the matrix &lt;script type=&quot;math/tex&quot;&gt;W_i&lt;/script&gt;. Denote this &lt;script type=&quot;math/tex&quot;&gt;d_v&lt;/script&gt;-dimensional vector by &lt;script type=&quot;math/tex&quot;&gt;\hat{\mathbf{u}}_i&lt;/script&gt;. The algorithm then calculates&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\hat{\mathbf{u}}_i \mathbf{v}^T&lt;/script&gt;
+
+&lt;p&gt;to update the routing coefficients. Since the calculation of &lt;script type=&quot;math/tex&quot;&gt;c_i&lt;/script&gt; is now recursive, the dynamic routing algorithm is performed for a number of iterations.&lt;/p&gt;
+
+&lt;p&gt;Since &lt;script type=&quot;math/tex&quot;&gt;g&lt;/script&gt; essentially limits the norm of both vectors to less than or equal to 1, the above project is a measure of how closely matched the two vectors are in &lt;strong&gt;orientation&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;As shown, the algorithm does not explicitly use back-propagation to find the routing coefficients. However, back-propagation is used to optimize the  parameters involved in the routing calculations. In particular, &lt;script type=&quot;math/tex&quot;&gt;W_i&lt;/script&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;implementation&quot;&gt;Implementation&lt;/h2&gt;
+
+&lt;p&gt;As mentioned, I have written a simple Tensorflow implementation of the MNIST capsule network as described in CapsNet17, located at my &lt;a href=&quot;https://github.com/leiz86/capsules-network&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;My implementation was based on the excellent Tensorflow implementations of capsule networks &lt;a href=&quot;https://github.com/naturomics/CapsNet-Tensorflow&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://github.com/InnerPeace-Wu/CapsNet-tensorflow&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Due to the lack of computing resources, I have not yet been able to fully train my implementation to verify the performance reported in CapsNet17.&lt;/p&gt;
+
+&lt;h2 id=&quot;final-comments&quot;&gt;Final Comments&lt;/h2&gt;
+
+&lt;p&gt;CapsNet17 offers a number of interesting ideas, in particular the generalization of scalar neurons to vector neurons and an alternative way of making layer connections. It appears to be more robust to affine transformations in the original image, rather than just translations.&lt;/p&gt;
+
+&lt;p&gt;The authors do not delve into their choice of network architecture, which leaves me with a some immediate questions. For example, why are the dimensions 8 and 16 used for primary and digit capsules, respectively? Can they both be 8-dimensional vectors? Can the weight matrix be simplified to the identity matrix (or &lt;script type=&quot;math/tex&quot;&gt;w_i * I&lt;/script&gt;) in this case?&lt;/p&gt;
+
+&lt;p&gt;The fact that there is 1 digit capsule for each output class also needs a bit more elaboration. I believe that this is a consequence of the additional mask-and-reconstruction used to regularize the MNIST training.&lt;/p&gt;
+
+&lt;p&gt;This shouldn’t be necessary, however, since the set of digit capsules can be encoded. In this case, only &lt;script type=&quot;math/tex&quot;&gt;\lceil \log_2(10) \rceil&lt;/script&gt; output capsules are necessary. Indeed, if capsules are indeed more efficient than CNNs with pooling, then they should not be used in a one-hot manner in any layer.&lt;/p&gt;
+
+&lt;p&gt;Finally, since capsules learn a different type of representation as CNNs and are more robust to certain affine transformations, are they more robust to adversarial examples? Some &lt;a href=&quot;https://github.com/InnerPeace-Wu/CapsNet-tensorflow&quot;&gt;early experiments&lt;/a&gt; appear to answer in the negative.&lt;/p&gt;
+
+&lt;p&gt;Plenty of fun future experiments with capsules!&lt;/p&gt;</content><author><name></name></author><summary type="html">In this post, I discuss the paper Dynamic Routing Between Capsules (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. For a simple Tensorflow implementation, please see my GitHub.</summary></entry><entry><title type="html">First Post!</title><link href="http://localhost:4000/jekyll/update/2017/11/19/first-post.html" rel="alternate" type="text/html" title="First Post!" /><published>2017-11-19T10:19:55-05:00</published><updated>2017-11-19T10:19:55-05:00</updated><id>http://localhost:4000/jekyll/update/2017/11/19/first-post</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/11/19/first-post.html">&lt;p&gt;In this blog, I hope to provide clear and concise explanations of interesting research topics in deep learning. I will mostly be writing in the research paper style that I picked up during my PhD time at UofT. For some samples of such writing, please take a look at the links in the About section.&lt;/p&gt;
 
 &lt;p&gt;Stay posted!&lt;/p&gt;</content><author><name></name></author><summary type="html">In this blog, I hope to provide clear and concise explanations of interesting research topics in deep learning. I will mostly be writing in the research paper style that I picked up during my PhD time at UofT. For some samples of such writing, please take a look at the links in the About section.</summary></entry></feed>

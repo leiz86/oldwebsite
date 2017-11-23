@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Capsule Networks</title>
-  <meta name="description" content="In this post, I discuss the paper Dynamic Routing Between Capsules (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. Let’s start with the two main ideas fr...">
+  <meta name="description" content="In this post, I discuss the paper Dynamic Routing Between Capsules (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. For a simple Tensorflow implementation...">
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="http://localhost:4000/jekyll/update/2017/11/20/capsules_draft.html">
+  <link rel="canonical" href="http://localhost:4000/jekyll/update/2017/11/22/capsules.html">
   <link rel="alternate" type="application/rss+xml" title="Lei M. Zhang&#39;s Research Blog" href="/feed.xml">
   
   
@@ -72,15 +72,17 @@
   <header class="post-header">
     <h1 class="post-title" itemprop="name headline">Capsule Networks</h1>
     <p class="post-meta">
-      <time datetime="2017-11-20T00:00:00-05:00" itemprop="datePublished">
+      <time datetime="2017-11-22T22:16:00-05:00" itemprop="datePublished">
         
-        Nov 20, 2017
+        Nov 22, 2017
       </time>
       </p>
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>In this post, I discuss the paper <a href="https://arxiv.org/abs/1710.09829">Dynamic Routing Between Capsules</a> (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. Let’s start with the two main ideas from the paper: <strong>capsules</strong> and <strong>dynamic routing</strong>.</p>
+    <p>In this post, I discuss the paper <a href="https://arxiv.org/abs/1710.09829">Dynamic Routing Between Capsules</a> (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. For a simple Tensorflow implementation, please see my  <a href="https://github.com/leiz86/capsules-network">GitHub</a>.</p>
+
+<p>Let’s start with the two main ideas from the paper: <strong>capsules</strong> and <strong>dynamic routing</strong>.</p>
 
 <h2 id="what-are-capsules">What are Capsules?</h2>
 
@@ -150,7 +152,7 @@ g(\mathbf{x}) = \left(1 - \frac{1}{1 + \|\mathbf{x}\|^2}\right) \frac{\mathbf{x}
 
 <h2 id="implementation">Implementation</h2>
 
-<p>I have written a simple Tensorflow implementation of the MNIST capsule network as described in CapsNet17, located at my <a href="https://github.com/leiz86/capsules-network">GitHub</a>.</p>
+<p>As mentioned, I have written a simple Tensorflow implementation of the MNIST capsule network as described in CapsNet17, located at my <a href="https://github.com/leiz86/capsules-network">GitHub</a>.</p>
 
 <p>My implementation was based on the excellent Tensorflow implementations of capsule networks <a href="https://github.com/naturomics/CapsNet-Tensorflow">here</a> and <a href="https://github.com/InnerPeace-Wu/CapsNet-tensorflow">here</a>.</p>
 
@@ -166,6 +168,8 @@ g(\mathbf{x}) = \left(1 - \frac{1}{1 + \|\mathbf{x}\|^2}\right) \frac{\mathbf{x}
 
 <p>This shouldn’t be necessary, however, since the set of digit capsules can be encoded. In this case, only <script type="math/tex">\lceil \log_2(10) \rceil</script> output capsules are necessary. Indeed, if capsules are indeed more efficient than CNNs with pooling, then they should not be used in a one-hot manner in any layer.</p>
 
+<p>Finally, since capsules learn a different type of representation as CNNs and are more robust to certain affine transformations, are they more robust to adversarial examples? Some <a href="https://github.com/InnerPeace-Wu/CapsNet-tensorflow">early experiments</a> appear to answer in the negative.</p>
+
 <p>Plenty of fun future experiments with capsules!</p>
 
   </div>
@@ -178,6 +182,30 @@ g(\mathbf{x}) = \left(1 - \frac{1}{1 + \|\mathbf{x}\|^2}\right) \frac{\mathbf{x}
   </script>
   
   
+
+  
+      <div id="disqus_thread"></div>
+    <script>
+
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://leiz86.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+                            
 </article>
 
       </div>

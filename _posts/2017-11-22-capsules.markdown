@@ -3,9 +3,12 @@ layout: post
 title: "Capsule Networks"
 date:   2017-11-22 22:16:00 -0500 
 categories: jekyll update
+comments: true
 ---
 
-In this post, I discuss the paper [Dynamic Routing Between Capsules](https://arxiv.org/abs/1710.09829) (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. Let's start with the two main ideas from the paper: **capsules** and **dynamic routing**.
+In this post, I discuss the paper [Dynamic Routing Between Capsules](https://arxiv.org/abs/1710.09829) (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. For a simple Tensorflow implementation, please see my  [GitHub](https://github.com/leiz86/capsules-network).
+
+Let's start with the two main ideas from the paper: **capsules** and **dynamic routing**.
 
 ## What are Capsules?
 
@@ -83,7 +86,7 @@ As shown, the algorithm does not explicitly use back-propagation to find the rou
 
 ## Implementation
 
-I have written a simple Tensorflow implementation of the MNIST capsule network as described in CapsNet17, located at my [GitHub](https://github.com/leiz86/capsules-network). 
+As mentioned, I have written a simple Tensorflow implementation of the MNIST capsule network as described in CapsNet17, located at my [GitHub](https://github.com/leiz86/capsules-network). 
 
 My implementation was based on the excellent Tensorflow implementations of capsule networks [here](https://github.com/naturomics/CapsNet-Tensorflow) and [here](https://github.com/InnerPeace-Wu/CapsNet-tensorflow).
 
@@ -99,6 +102,6 @@ The fact that there is 1 digit capsule for each output class also needs a bit mo
 
 This shouldn't be necessary, however, since the set of digit capsules can be encoded. In this case, only $$\lceil \log_2(10) \rceil$$ output capsules are necessary. Indeed, if capsules are indeed more efficient than CNNs with pooling, then they should not be used in a one-hot manner in any layer. 
 
-Finally, since capsules learn a different type of representation as CNNs and are more robust to certain affine transformations, are they more robust to adversarial examples? Some [early experiments](https://github.com/InnerPeace-Wu/CapsNet-tensorflow) appears to answer in the negative.
+Finally, since capsules learn a different type of representation as CNNs and are more robust to certain affine transformations, are they more robust to adversarial examples? Some [early experiments](https://github.com/InnerPeace-Wu/CapsNet-tensorflow) appear to answer in the negative.
 
 Plenty of fun future experiments with capsules!
