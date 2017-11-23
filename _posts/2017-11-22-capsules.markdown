@@ -99,4 +99,6 @@ The fact that there is 1 digit capsule for each output class also needs a bit mo
 
 This shouldn't be necessary, however, since the set of digit capsules can be encoded. In this case, only $$\lceil \log_2(10) \rceil$$ output capsules are necessary. Indeed, if capsules are indeed more efficient than CNNs with pooling, then they should not be used in a one-hot manner in any layer. 
 
+Finally, since capsules learn a different type of representation as CNNs and are more robust to certain affine transformations, are they more robust to adversarial examples? Some [early experiments](https://github.com/InnerPeace-Wu/CapsNet-tensorflow) appears to answer in the negative.
+
 Plenty of fun future experiments with capsules!
