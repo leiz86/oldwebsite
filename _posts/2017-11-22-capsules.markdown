@@ -4,6 +4,8 @@ title: "Capsule Networks"
 date:   2017-11-22 22:16:00 -0500 
 categories: jekyll update
 comments: true
+description: explanation of capsule networks using tensorflow, linear algebra, convolutional neural networks
+author: Lei M. Zhang
 ---
 
 In this post, I discuss the paper [Dynamic Routing Between Capsules](https://arxiv.org/abs/1710.09829) (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. For a simple Tensorflow implementation, please see my  [GitHub](https://github.com/leiz86/capsules-network).
