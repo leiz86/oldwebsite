@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "A C++ Simulator for Staircase Codes"
+title: "An Introduction to Staircase Codes"
 date:   2017-12-14 20:00:00 -0500 
 categories: jekyll update
 comments: true
