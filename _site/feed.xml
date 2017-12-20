@@ -1,4 +1,78 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-12-14T22:29:05-05:00</updated><id>http://localhost:4000/</id><title type="html">Lei M. Zhang’s Research Blog</title><subtitle>This is the research blog of Lei M. Zhang, PhD (ECE, U of Toronto).  Topics include deep learning, variational inference, graphical models,  information theory and coding theory. Enjoy!</subtitle><entry><title type="html">Capsule Networks</title><link href="http://localhost:4000/jekyll/update/2017/11/22/capsules.html" rel="alternate" type="text/html" title="Capsule Networks" /><published>2017-11-22T22:16:00-05:00</published><updated>2017-11-22T22:16:00-05:00</updated><id>http://localhost:4000/jekyll/update/2017/11/22/capsules</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/11/22/capsules.html">&lt;p&gt;In this post, I discuss the paper &lt;a href=&quot;https://arxiv.org/abs/1710.09829&quot;&gt;Dynamic Routing Between Capsules&lt;/a&gt; (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. For a simple Tensorflow implementation, please see my  &lt;a href=&quot;https://github.com/leiz86/capsules-network&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-12-19T22:23:23-05:00</updated><id>http://localhost:4000/</id><title type="html">Lei M. Zhang’s Research Blog</title><subtitle>This is the research blog of Lei M. Zhang, PhD (ECE, U of Toronto).  Topics include deep learning, variational inference, graphical models,  information theory and coding theory. Enjoy!</subtitle><entry><title type="html">An Introduction to Staircase Codes</title><link href="http://localhost:4000/jekyll/update/2017/12/14/staircase.html" rel="alternate" type="text/html" title="An Introduction to Staircase Codes" /><published>2017-12-14T20:00:00-05:00</published><updated>2017-12-14T20:00:00-05:00</updated><id>http://localhost:4000/jekyll/update/2017/12/14/staircase</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/12/14/staircase.html">&lt;p&gt;In today’s post, I’d like to describe a class of error-correcting codes that have been the &lt;a href=&quot;http://ieeexplore.ieee.org/document/6787025/&quot;&gt;focus&lt;/a&gt; of my &lt;a href=&quot;http://ieeexplore.ieee.org/document/8082562/&quot;&gt;research&lt;/a&gt; &lt;a href=&quot;http://ieeexplore.ieee.org/document/7950925/&quot;&gt;career&lt;/a&gt; for the better part of the last 6 years. They are called &lt;a href=&quot;http://ieeexplore.ieee.org/document/6074908/&quot;&gt;Staircase Codes&lt;/a&gt; and were originally invented Professor Kschisching’s research group. There has been some recent interest in using staircase codes as efficient error-correcting codes for next-generation, long-haul fiber-optic communication networks.&lt;/p&gt;
+
+&lt;p&gt;I have implemented a staircase code simulator in C++, available at my &lt;a href=&quot;https://github.com/leiz86/staircase-simulator&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-an-error-correcting-code&quot;&gt;What is an error-correcting code?&lt;/h2&gt;
+
+&lt;p&gt;First, let’s quickly review error-correcting codes. Given a particular channel model, e.g., the binary-input additive white Gaussian noise (AWGN) channel, we would like to transmit information (measured in bits) over the channel with arbitrarily low probability of error at the receiver.&lt;/p&gt;
+
+&lt;p&gt;According to information theory, such reliable communication is only achievable while operating below the &lt;strong&gt;capacity&lt;/strong&gt; (or &lt;strong&gt;Shannon limit&lt;/strong&gt;) of the channel, given as the rate bits/channel-use. The purpose of an error-correcting code, then, is to achieve the maximum rate of reliable communication, while operating below the channel capacity.&lt;/p&gt;
+
+&lt;p&gt;Operationally, the channel capacity gives us a convenient upper-bound on the performance of an error-correcting code. In simple terms, a good error-correcting code operates very close to the channel capacity.&lt;/p&gt;
+
+&lt;h2 id=&quot;staircase-codes&quot;&gt;Staircase codes&lt;/h2&gt;
+
+&lt;h1 id=&quot;channel-model&quot;&gt;Channel Model&lt;/h1&gt;
+
+&lt;p&gt;Staircase codes are error-correcting codes designed for the binary-symmetric channel (BSC). The BSC is a simple bit-flipping channel where each transmitted is flipped, independently, with probability &lt;script type=&quot;math/tex&quot;&gt;p&lt;/script&gt;. The channel is usually denoted by &lt;script type=&quot;math/tex&quot;&gt;\textrm{BSC}(p)&lt;/script&gt;. The capacity of this simple channel is given by&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation*}
+C(p) = 1 + p\log_2(p) + (1-p)\log_2(1-p).
+\end{equation*}&lt;/script&gt;
+
+&lt;p&gt;Though simple, the BSC is surprisingly effective at modelling modern, long-haul fiber-optic communication systems. Of course, the error-correcting code is usually the very last block in a very long chain of digital, analog, and optical processing modules in which the channel is not very BSC-like. Nevertheless, at the input of the error-correcting code, the BSC is a good model for the channel.&lt;/p&gt;
+
+&lt;h1 id=&quot;motivating-factors&quot;&gt;Motivating Factors&lt;/h1&gt;
+
+&lt;p&gt;Good error-correcting codes for the BSC has been known for a few decades. First to come to mind are low-density parity-check (LDPC) codes and Turbo codes. The key motivation for the invention of the new class of staircase codes for long-haul fiber-optic communications is the fact that these systems have extremely high bit-rates: on the order of 1, 10, even 100 Gbits/s. Modern error-correcting codes such as LDPC or Turbo codes have significant decoding complexity and data-flow which makes supporting the high bit-rates difficult.&lt;/p&gt;
+
+&lt;p&gt;Staircase codes are designed to minimize decoding complexity and data-flow. Emphasizing these requirements means their performance (in terms of coding gain) is slightly below that of other modern error-correcting codes. However, the decrease in complexity is well-worth the trade-off.&lt;/p&gt;
+
+&lt;p&gt;For a detailed (and quantitative) discussion of the motivating factors behind staircase codes, please refer to the paper &lt;a href=&quot;http://ieeexplore.ieee.org/abstract/document/6074908/&quot;&gt;Staircase Codes: FEC for 100 Gb/s OTN&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;code-structure-and-encoding&quot;&gt;Code Structure and Encoding&lt;/h1&gt;
+
+&lt;p&gt;Here is a block diagram of the staircase code structure. The origin of its name is now obvious!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/files/fig/staircase/staircase.jpg&quot; alt=&quot;staircase diagram&quot; title=&quot;Staircase Code Diagram&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;To understand this diagram, we first define a &lt;strong&gt;component code&lt;/strong&gt;, which is any systematic binary block code &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt; of length &lt;script type=&quot;math/tex&quot;&gt;n&lt;/script&gt;, information bits &lt;script type=&quot;math/tex&quot;&gt;k&lt;/script&gt;, and decoding radius &lt;script type=&quot;math/tex&quot;&gt;t&lt;/script&gt;, denoted by &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}(n,k,t)&lt;/script&gt;. We also assume that &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt; has a low-complexity decoding algorithm, for example, a syndrome decoder.&lt;/p&gt;
+
+&lt;p&gt;First, we select &lt;script type=&quot;math/tex&quot;&gt;w=n&lt;/script&gt; and arrange &lt;script type=&quot;math/tex&quot;&gt;w&lt;/script&gt; copies of &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;, row-by-row, within each consecutive pair of staircase blocks: &lt;script type=&quot;math/tex&quot;&gt;B_i&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;B_{i+1}&lt;/script&gt;. Naturally, this requires that &lt;script type=&quot;math/tex&quot;&gt;n&lt;/script&gt; is even.&lt;/p&gt;
+
+&lt;p&gt;Initially, block &lt;script type=&quot;math/tex&quot;&gt;B_0&lt;/script&gt; is filled with all-zero bits. Since this block carries no information, it is actually not transmitted.&lt;/p&gt;
+
+&lt;p&gt;To encode the next block, arrange information (input) bits row-by-row into the white part of block &lt;script type=&quot;math/tex&quot;&gt;B_1&lt;/script&gt;. Arrange blocks &lt;script type=&quot;math/tex&quot;&gt;B_0&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;B_1&lt;/script&gt; into a &lt;script type=&quot;math/tex&quot;&gt;w \times 2w&lt;/script&gt; matrix, encode each component code &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt; using its own systematic encoder. The resulting parity (or check) bits are used to populate the red part of block &lt;script type=&quot;math/tex&quot;&gt;B_1&lt;/script&gt;. For subsequent blocks, given &lt;script type=&quot;math/tex&quot;&gt;B_{i-1}&lt;/script&gt;, the matrix &lt;script type=&quot;math/tex&quot;&gt;B_{i-1}^T&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;B_i&lt;/script&gt; is formed (&lt;script type=&quot;math/tex&quot;&gt;()^T&lt;/script&gt; denotes matrix transpose) and the component code encoding proceeds as above.&lt;/p&gt;
+
+&lt;p&gt;Since the red blocks do not carry information, the code rate of a staircase code is given by&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation*}
+R = \frac{w - (n-k)}{w} = 1 - 2(1  - k/n).
+\end{equation*}&lt;/script&gt;
+
+&lt;h1 id=&quot;decoding&quot;&gt;Decoding&lt;/h1&gt;
+
+&lt;p&gt;Staircase codes are decoded by using an iterative decoder, operating over several received blocks. Consider the above figure to be a set of 7 received blocks of bits from the BSC. The decoder will operate over these blocks, shift out a decoded block, and shift in a newly received block. Such a decoder is referred to as a &lt;strong&gt;sliding-window decoder&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The iterative decoding process is similar to the encoding process. Consider a sliding window containing &lt;script type=&quot;math/tex&quot;&gt;W&lt;/script&gt; blocks. For each &lt;script type=&quot;math/tex&quot;&gt;i \in \{0, \dots, W-2\}&lt;/script&gt;, form the &lt;script type=&quot;math/tex&quot;&gt;w \times 2w&lt;/script&gt; matrix &lt;script type=&quot;math/tex&quot;&gt;B_i^T, \, B_{i+1}&lt;/script&gt; and decode each row of the matrix by an efficient component code decoder. For low decoding data-flow, a syndrome decoder is usually used. An iteration is completed when the end of the window is reached.&lt;/p&gt;
+
+&lt;p&gt;This process is then repeated until either a maximum number of iterations has been reached or no bit-flips occur within the window. At the end of decoding, block &lt;script type=&quot;math/tex&quot;&gt;B_0&lt;/script&gt; is decoded and removed from the window. A new block &lt;script type=&quot;math/tex&quot;&gt;B_W&lt;/script&gt; is then shifted into the window. The process continues indefinitely.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-c-simulator-for-staircase-codes&quot;&gt;A C++ Simulator for Staircase Codes&lt;/h2&gt;
+
+&lt;p&gt;If you are interested in trying out staircase codes as a possible error-correction solution, I have implemented a full simulator for staircase codes in C++, available at my &lt;a href=&quot;https://github.com/leiz86/staircase-simulator&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The only non-standard library that the simulator relies on is a &lt;script type=&quot;math/tex&quot;&gt;\textrm{BCH}(1023, 993, 7)&lt;/script&gt; decoder implementation, currently compiled as a shared library on Linux (Ubuntu 16.04). The staircase code core implementation is fully modular and will be able to use any other component code decoder implementation with minor changes.&lt;/p&gt;
+
+&lt;p&gt;The simulated bit-error rate (BER) and block error-rate (BKER) for a staircase code based on &lt;script type=&quot;math/tex&quot;&gt;\textrm{BCH}(1023, 993, 7)&lt;/script&gt; (shortened by 1), with &lt;script type=&quot;math/tex&quot;&gt;w=511&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;W=7&lt;/script&gt; and at most &lt;script type=&quot;math/tex&quot;&gt;6&lt;/script&gt; decoding iterations, is shown in the figure below. The simulations were ran on a quad-core Intel Core I5-5200U CPU clocked at 2.20GHz, for around 40 minutes.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/files/fig/staircase/simulation.png&quot; alt=&quot;simulation result&quot; title=&quot;Simulation Results&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;From the results, we observe that the transition between having a large number of decoding errors, i.e., little or no error correction, to virtually no decoding errors, is very sharp. This is known as a &lt;strong&gt;threshold&lt;/strong&gt; of the BSC channel parameter, at which the state of the decoder undergoes a phase transition.&lt;/p&gt;
+
+&lt;p&gt;Due to this sharp transition, it is difficult to fully observe the change in error rates around the threshold, especially given the computation power and run-time used to produce the above example plot. As a reference, the results reported in &lt;a href=&quot;http://ieeexplore.ieee.org/document/6787025/&quot;&gt;Staircase Codes With 6% to 33% Overhead&lt;/a&gt; were simulated on a supercomputing cluster for over 3 months!&lt;/p&gt;
+
+&lt;p&gt;For more details and extensive analysis of the threshold of staircase codes, please refer to the paper &lt;a href=&quot;http://ieeexplore.ieee.org/document/8082562/&quot;&gt;Spatially-Coupled Split-Component Codes with Iterative Algebraic Decoding&lt;/a&gt;. Note that Spatially-Coupled Split-Component codes is a generalization of staircase codes.&lt;/p&gt;</content><author><name>Lei M. Zhang</name></author><summary type="html">In today’s post, I’d like to describe a class of error-correcting codes that have been the focus of my research career for the better part of the last 6 years. They are called Staircase Codes and were originally invented Professor Kschisching’s research group. There has been some recent interest in using staircase codes as efficient error-correcting codes for next-generation, long-haul fiber-optic communication networks.</summary></entry><entry><title type="html">Capsule Networks</title><link href="http://localhost:4000/jekyll/update/2017/11/22/capsules.html" rel="alternate" type="text/html" title="Capsule Networks" /><published>2017-11-22T22:16:00-05:00</published><updated>2017-11-22T22:16:00-05:00</updated><id>http://localhost:4000/jekyll/update/2017/11/22/capsules</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/11/22/capsules.html">&lt;p&gt;In this post, I discuss the paper &lt;a href=&quot;https://arxiv.org/abs/1710.09829&quot;&gt;Dynamic Routing Between Capsules&lt;/a&gt; (CapsNet17) by S. Sabour, N. Frosst, and G. Hinton. For a simple Tensorflow implementation, please see my  &lt;a href=&quot;https://github.com/leiz86/capsules-network&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Let’s start with the two main ideas from the paper: &lt;strong&gt;capsules&lt;/strong&gt; and &lt;strong&gt;dynamic routing&lt;/strong&gt;.&lt;/p&gt;
 
