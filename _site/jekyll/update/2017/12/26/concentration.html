@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Concentration Inequalities and GAN Theory</title>
+  <meta name="description" content="In this post, I’d like to highlight one of my favorite new papers. In Theoretical Limitations of Encoder-Decoder GAN Architectures by Sanjeev Arora, Andrej R...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/jekyll/update/2017/12/26/concentration.html">
+  <link rel="alternate" type="application/rss+xml" title="Lei M. Zhang&#39;s Research Blog" href="/feed.xml">
+  
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Lei M. Zhang&#39;s Research Blog</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Concentration Inequalities and GAN Theory</h1>
+    <p class="post-meta">
+      <time datetime="2017-12-26T10:00:00-05:00" itemprop="datePublished">
+        
+        Dec 26, 2017
+      </time>
+      
+        • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Lei M. Zhang</span></span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In this post, I’d like to highlight one of my favorite new papers. In <a href="https://arxiv.org/abs/1711.02651">Theoretical Limitations of Encoder-Decoder GAN Architectures</a> by Sanjeev Arora, Andrej Ristenski, and Yi Zhang (Nov 2017), the authors show an interesting <strong>negative</strong> result regarding <a href="https://arxiv.org/abs/1605.09782">Encoder-Decoder GANs</a>.</p>
+
+<p>The key result of the paper is that an Encoder-Decoder (or Bi-directional) generative adversarial network (BiGAN) can have arbitrarily low training cost (i.e., appear arbitrarily good during training) but also be essentially useless (see <a href="https://arxiv.org/abs/1711.02651">Theorem 1</a>). Useless here means that the encoder merely extracts noise from an input sample, while the generator has learned a distribution with small support (i.e., mode collapse).</p>
+
+<p>It is worth to mention that in the proof of the main theorem, the authors used the techniques of defining probabilistic ensembles and applying concentration inequalities to their expectations and realizations.</p>
+
+<h2 id="ensembles-and-concentration">Ensembles and Concentration</h2>
+
+<p>These techniques are often used when a statement is difficult to prove for particular instances of a problem, but easy in aggregate. For this case, there are many possible different encoder and generator instances and their combinations.</p>
+
+<p>The key idea is to consider all encoder/generator pairs together, i.e., to define an ensemble of encoders and generators using probability distributions. Their aggregate properties, such as an expectation with respect to an input (data) distribution, can then be found.</p>
+
+<p>Once the expectation is found, it would be useful to know how far from the expected value a <strong>sample</strong> of the ensemble will be. A <strong>concentration inequality</strong> essentially provides a guarantee for the closeness of a sample of the ensemble to the expected value of the ensemble.</p>
+
+<p>The Law of Large Numbers is a well-known expression of the idea of concentration. It is guaranteed, in the weak sense, by Tchebychev’s inequality.</p>
+
+<h2 id="concentration-inequalities-in-coding-theory">Concentration Inequalities in Coding Theory</h2>
+
+<p>These techniques are well-known and plays important roles in information theory and the theory of error-correcting codes. For example, they were used in <a href="http://ieeexplore.ieee.org/document/8082562/">Spatially-coupled Split-component Codes with Iterative Algebraic Decoding</a>, to derive a method of analyzing the performance of the class of Spatially-coupled Split-component (SCSC) codes. They also played an instrumental part in the theory of <a href="http://ieeexplore.ieee.org/abstract/document/910575/">Low-Density Parity-Check</a> <a href="http://ieeexplore.ieee.org/abstract/document/910577/">(LDPC) Codes</a>.</p>
+
+<p>In the SCSC work, such codes are too numerous and too large (in terms of number of bits per codeword) to study individually. In order to determine the channel noise-level at which decoding success or fails, called the <strong>threshold</strong> noise level, the following steps were required:</p>
+
+<ol>
+  <li>Define a graphical model for the class of SCSC codes</li>
+  <li>Define an ensemble of graphs which models all possible SCSC codes with given parameters</li>
+  <li>Calculate the threshold noise-level for the <strong>expected</strong> decoder output bit-error probability (BER)</li>
+  <li>Use concentration inequalities to prove that, as the length of codewords tends to infinity, any sample from the graph would have decoder output BER similar to the expected BER calculated in step 3.</li>
+</ol>
+
+<p>Note that the expectation is taken over the random graph ensemble and channel noise samples. Calculating the probability of error for all codes and channel noise samples would be impractical, as in the case of BiGANS.</p>
+
+<p>We used the concentration inequality known as <a href="https://projecteuclid.org/euclid.aoap/1177004612">Wormald’s Theorem</a> was used. It is quite interesting as the method first finds a system of differential equations describing the evolution of the expected graph throughout a random edge-deletion process. The concentration guarantee is given for the solution of the differential equations. Hence, Wormald’s theorem is also known as the <a href="https://www.cs.upc.edu/~diaz/papersd/DEM.pdf">Differential Equations Method</a>. For more details of the proof and technique, please refer to Chapter 4 of <a href="http://hdl.handle.net/1807/79549">Analysis and Design of Staircase Codes for High Bit-Rate
+Fibre-Optic Communication</a>.</p>
+
+<p>Let’s now see a glimpse of the application of concentration inequalities for BiGANs.</p>
+
+<h2 id="encoder-decoder-bi-directional-gans">Encoder-Decoder (Bi-directional) GANs</h2>
+
+<p>Let <script type="math/tex">\mathbb{R}^d</script> be the <strong>data space</strong>, from which samples <script type="math/tex">x</script> of a given data set is obtained. This could be the pixel space, for example. Let <script type="math/tex">\mathbb{R}^{d'}</script> be the <strong>code space</strong>, where elements <script type="math/tex">z</script> of a latent code is obtained.</p>
+
+<p>An encoder-decoder GAN architecture then simply aims to find maps <script type="math/tex">E : \mathbb{R}^d \mapsto \mathbb{R}^{d'}</script> and <script type="math/tex">G : \mathbb{R}^{d'} \mapsto \mathbb{R}^d</script>, referred to as the encoder and decoder (or generator). Of course, there are many ways of finding them.</p>
+
+<p>Generative adversarial networks (GANs) is one way of finding <script type="math/tex">E(x)</script> and <script type="math/tex">G(z)</script> that does not involve explicit probability calculations. To use GAN in this case, a discriminator network <script type="math/tex">D : \mathbb{R}^{d} \times \mathbb{R}^{d'} \mapsto \mathbb{R}</script> is used to distinguish the distributions of the pairs <script type="math/tex">(x, E(x))</script> and <script type="math/tex">(G(z), z)</script>. If the generative network has learned the joint distribution over data and code spaces <script type="math/tex">p(x,z)</script>, then <script type="math/tex">D</script> should not be able to distinguish between samples <script type="math/tex">(x, E(x))</script> (i.e., data sample <script type="math/tex">x</script> and its codeword) and <script type="math/tex">(G(z), z)</script> (i.e., generated sample and its codeword).</p>
+
+<p>The objective function is then</p>
+
+<script type="math/tex; mode=display">\begin{equation*}
+\min_{G, E} \max_D \left| \mathbb{E}_{x\sim\mu} \phi( D(x, E(x)) ) - \mathbb{E}_{z\sim\nu} \phi( D(G(z), z)) ) \right|,
+\end{equation*}</script>
+
+<p>where <script type="math/tex">\mu</script> and <script type="math/tex">\nu</script> are data and code distributions, <script type="math/tex">\phi</script> is some concave function (such as log), assumed to have outputs in the range <script type="math/tex">[-\Delta,\Delta]</script> for some <script type="math/tex">\Delta \geq 1</script> and is <script type="math/tex">L_{\phi}</script>-<a href="https://en.wikipedia.org/wiki/Lipschitz_continuity">Lipschitz</a> (<script type="math/tex">L_{\phi}</script> is a constant. This is a continuity requirement from the concentration inequality).</p>
+
+<h3 id="the-main-theorem">The main theorem</h3>
+
+<p>For <script type="math/tex">G</script> of support <script type="math/tex">m \triangleq p\Delta^2\log(p\Delta L L_{\phi} / \epsilon)^2 / \epsilon^2</script>, <script type="math/tex">E</script> with at most <script type="math/tex">d'</script> non-zero weights, and all discriminators <script type="math/tex">D</script> that are <script type="math/tex">L</script>-Lipschitz (<script type="math/tex">L</script>, like <script type="math/tex">L_{\phi}</script>, is a constant) and has <script type="math/tex">p</script> parameters, with probability <script type="math/tex">1 - \exp(-\Omega(p\log(\Delta/\epsilon)))</script>:</p>
+
+<script type="math/tex; mode=display">\begin{equation}\label{eqn:theorem1}
+\left| \mathbb{E}_{x\sim\mu}\phi(D(x,E(x))) - \mathbb{E}_{z\sim\nu}\phi(D(G(z),z)) \right| \leq \epsilon.
+\end{equation}</script>
+
+<p>In the following, we only focus on the concentration proof for the generator. The authors also construct the encoder ensemble in an interesting way that is and well-worth taking a look.</p>
+
+<h2 id="concentration-of-good-generators">Concentration of Good Generators</h2>
+
+<h3 id="definitions-and-notation">Definitions and Notation</h3>
+
+<p>The technical theorem requires a brief introduction of new notation and concepts. Most of the notation is from the original paper, with minor simplifications.</p>
+
+<p>The idea here is to first build a probabilistic model for <script type="math/tex">G</script>, i.e., to consider every <script type="math/tex">G</script> of small support to be sampled from an ensemble according to some probability distribution.</p>
+
+<p>To do so, first partition <script type="math/tex">\mathbb{R}^{d'}</script> into <script type="math/tex">m</script> blocks with equal probability as given by the code distribution <script type="math/tex">\nu</script>. Then, sample <script type="math/tex">m</script> samples <script type="math/tex">x_1^*, x_2^*,\dots,x_m^*</script> from the data distribution. The randomness in choosing these samples from the data space is what allows <script type="math/tex">G</script> to be a random variable.</p>
+
+<p>Given <script type="math/tex">z</script> from the code space, let <script type="math/tex">i(z) \in \{1,\dots, m\}</script> be the index of the partition in which <script type="math/tex">z</script> lies. The generator is defined as <script type="math/tex">G(z) \triangleq x_{i(z)}^* \otimes z</script> where <script type="math/tex">\otimes</script> is some masking function. In other words, the generator simply selects the sampled image associated with the partition for <script type="math/tex">z</script> and masks it.</p>
+
+<p>Finally, we call <script type="math/tex">z_i</script> and <script type="math/tex">z_j</script> non-colliding if <script type="math/tex">i(z_i) \neq i(z_j)</script>. A set <script type="math/tex">T = \{z_1,\dots,z_m\}</script> is non-colliding if all pairs in the set are non-colliding. Let <script type="math/tex">\mathcal{T}</script> denote the distribution over non-colliding sets, such that each <script type="math/tex">z_i</script> is sampled independently from the conditional distribution of <script type="math/tex">\nu</script> inside the <script type="math/tex">i</script>-th partition.</p>
+
+<h3 id="many-expectations">Many Expectations</h3>
+
+<p>Recall that property that we want to show is for (<script type="math/tex">\ref{eqn:theorem1}</script>) to be arbitrarily small. For the generator, we are then interested in evaluating</p>
+
+<script type="math/tex; mode=display">\begin{equation}\label{eqn:expectation}
+\mathbb{E}_{z\sim\nu}\phi(D(G(z),z)).
+\end{equation}</script>
+
+<p>Note that since <script type="math/tex">G</script> is now a random variable, this expectation is also a random variable.</p>
+
+<p>Now, the key expectation here is</p>
+
+<script type="math/tex; mode=display">\begin{equation*}
+\mathbb{E}_G \mathbb{E}_{z\sim\nu} \phi( D( G(z), z) ),
+\end{equation*}</script>
+
+<p>which is shown in the paper to be equal to (<script type="math/tex">\ref{eqn:expectation}</script>). The task remaining is to show the concentration of (<script type="math/tex">\ref{eqn:expectation}</script>) to its expectation under the distribution of <script type="math/tex">G</script>.</p>
+
+<p>Note that there are two sources of randomness, namely <script type="math/tex">\nu</script>, the distribtuion over <script type="math/tex">z</script>, and some distribution over <script type="math/tex">G</script>. This is similar to the case analyzed in my PhD work, where the two sources of random are randomly graphical models of SCSC codes and channel noise samples.</p>
+
+<h3 id="concentration">Concentration</h3>
+
+<p>Using the idea of non-colliding sets and their distribution <script type="math/tex">\mathcal{T}</script>, the paper shows that (<script type="math/tex">\ref{eqn:expectation}</script>) is equivalent to</p>
+
+<script type="math/tex; mode=display">\begin{equation*}
+\mathbb{E}_{T \sim \mathcal{T}} \mathbb{E}_{z \sim T} \phi ( D(G(z), z)),
+\end{equation*}</script>
+
+<p>where <script type="math/tex">\mathbb{E}_{z \sim T}</script> is sample mean over the elements in <script type="math/tex">T</script>.</p>
+
+<p>This trick essentially provides an easier way to handle the randomness in <script type="math/tex">z</script>, since fixing <script type="math/tex">T</script> means samples <script type="math/tex">z_i</script> are non-colliding, independent, and has equal probability under <script type="math/tex">\nu</script>.</p>
+
+<p>The authors then consider <script type="math/tex">D</script> to be fixed and note that the random variables in the function</p>
+
+<script type="math/tex; mode=display">\begin{equation*}
+\mathbb{E}_{z \sim T} \phi( D( G(z), z) ) \triangleq f(x_1^*, \dots, x_m^*, z_1, \dots, z_m)
+\end{equation*}</script>
+
+<p>are all independent. Hence, the concentration inequality called <a href="https://people.eecs.berkeley.edu/~bartlett/courses/281b-sp08/13.pdf">McDiarmid’s Inequality</a> (MI) can be used to guarantee concentration.</p>
+
+<p>McDiarmid’s Inequality has the following two conditions:</p>
+
+<ol>
+  <li>Independence: the random variable is dependent only on mutually independent random variables</li>
+  <li>Bounded differences, given by</li>
+</ol>
+
+<script type="math/tex; mode=display">\begin{equation*}
+\sup_{x_1,\dots, x_n, \hat{x}_i} | f(x_1, \dots, x_n) - f(x_1, \dots, x_{i-1}, \hat{x}_i, x_{i+1}, \dots, x_n) | \leq c_i,
+\end{equation*}</script>
+
+<p>for <script type="math/tex">1 \leq i \leq n</script>.</p>
+
+<p>The first condition is satisfied by the setup of <script type="math/tex">G</script> and <script type="math/tex">T</script>. The second condition is also verified by the author, with the bound given by <script type="math/tex">1 / m</script>. Note that this is part of the reason for the complicated expression of <script type="math/tex">m</script>.</p>
+
+<p>Applying <strong>McDiarmid’s Inequality</strong>, we have the result:</p>
+
+<script type="math/tex; mode=display">\begin{equation*}
+\textrm{Pr}_{T,G}( |f(x_i^*, z_i) - \mathbb{E}_{T,G} f(x_i^*, z_i) | ) \leq \exp(-\Omega(m\epsilon^2)),
+\end{equation*}</script>
+
+<p>where we abbreviated the notation of <script type="math/tex">f</script>.</p>
+
+<p>From here, there are just a couple of more steps to the final generator concentration result using an epsilon-net / union bound argument and applications of another simple concentration inequality called Markov’s inequality.</p>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+  </script>
+  
+  
+
+  
+      <div id="disqus_thread"></div>
+    <script>
+
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://leiz86.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+                            
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Lei M. Zhang&#39;s Research Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              Lei M. Zhang&#39;s Research Blog
+            
+            </li>
+            
+            <li><a href="mailto:leiz86+blog@gmail.com">leiz86+blog@gmail.com</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/leiz86"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">leiz86</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>This is the research blog of Lei M. Zhang, PhD (ECE, U of Toronto).  Topics include deep learning, variational inference, graphical models,  information theory and coding theory. Enjoy!</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

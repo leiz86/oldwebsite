@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>An Introduction to Staircase Codes</title>
+  <meta name="description" content="In today’s post, I’d like to describe a class of error-correcting codes that have been the focus of my research career for the better part of the last 6 year...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/jekyll/update/2017/12/14/staircase.html">
+  <link rel="alternate" type="application/rss+xml" title="Lei M. Zhang&#39;s Research Blog" href="/feed.xml">
+  
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Lei M. Zhang&#39;s Research Blog</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">An Introduction to Staircase Codes</h1>
+    <p class="post-meta">
+      <time datetime="2017-12-14T20:00:00-05:00" itemprop="datePublished">
+        
+        Dec 14, 2017
+      </time>
+      
+        • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Lei M. Zhang</span></span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In today’s post, I’d like to describe a class of error-correcting codes that have been the <a href="http://ieeexplore.ieee.org/document/6787025/">focus</a> of my <a href="http://ieeexplore.ieee.org/document/8082562/">research</a> <a href="http://ieeexplore.ieee.org/document/7950925/">career</a> for the better part of the last 6 years. They are called <a href="http://ieeexplore.ieee.org/document/6074908/">Staircase Codes</a> and were originally invented Professor Kschisching’s research group. There has been some recent interest in using staircase codes as efficient error-correcting codes for next-generation, long-haul fiber-optic communication networks.</p>
+
+<p>I have implemented a staircase code simulator in C++, available at my <a href="https://github.com/leiz86/staircase-simulator">GitHub</a>.</p>
+
+<h2 id="what-is-an-error-correcting-code">What is an error-correcting code?</h2>
+
+<p>First, let’s quickly review error-correcting codes. Given a particular channel model, e.g., the binary-input additive white Gaussian noise (AWGN) channel, we would like to transmit information (measured in bits) over the channel with arbitrarily low probability of error at the receiver.</p>
+
+<p>According to information theory, such reliable communication is only achievable while operating below the <strong>capacity</strong> (or <strong>Shannon limit</strong>) of the channel, given as the rate bits/channel-use. The purpose of an error-correcting code, then, is to achieve the maximum rate of reliable communication, while operating below the channel capacity.</p>
+
+<p>Operationally, the channel capacity gives us a convenient upper-bound on the performance of an error-correcting code. In simple terms, a good error-correcting code operates very close to the channel capacity.</p>
+
+<h2 id="staircase-codes">Staircase codes</h2>
+
+<h1 id="channel-model">Channel Model</h1>
+
+<p>Staircase codes are error-correcting codes designed for the binary-symmetric channel (BSC). The BSC is a simple bit-flipping channel where each transmitted is flipped, independently, with probability <script type="math/tex">p</script>. The channel is usually denoted by <script type="math/tex">\textrm{BSC}(p)</script>. The capacity of this simple channel is given by</p>
+
+<script type="math/tex; mode=display">\begin{equation*}
+C(p) = 1 + p\log_2(p) + (1-p)\log_2(1-p).
+\end{equation*}</script>
+
+<p>Though simple, the BSC is surprisingly effective at modelling modern, long-haul fiber-optic communication systems. Of course, the error-correcting code is usually the very last block in a very long chain of digital, analog, and optical processing modules in which the channel is not very BSC-like. Nevertheless, at the input of the error-correcting code, the BSC is a good model for the channel.</p>
+
+<h1 id="motivating-factors">Motivating Factors</h1>
+
+<p>Good error-correcting codes for the BSC has been known for a few decades. First to come to mind are low-density parity-check (LDPC) codes and Turbo codes. The key motivation for the invention of the new class of staircase codes for long-haul fiber-optic communications is the fact that these systems have extremely high bit-rates: on the order of 1, 10, even 100 Gbits/s. Modern error-correcting codes such as LDPC or Turbo codes have significant decoding complexity and data-flow which makes supporting the high bit-rates difficult.</p>
+
+<p>Staircase codes are designed to minimize decoding complexity and data-flow. Emphasizing these requirements means their performance (in terms of coding gain) is slightly below that of other modern error-correcting codes. However, the decrease in complexity is well-worth the trade-off.</p>
+
+<p>For a detailed (and quantitative) discussion of the motivating factors behind staircase codes, please refer to the paper <a href="http://ieeexplore.ieee.org/abstract/document/6074908/">Staircase Codes: FEC for 100 Gb/s OTN</a>.</p>
+
+<h1 id="code-structure-and-encoding">Code Structure and Encoding</h1>
+
+<p>Here is a block diagram of the staircase code structure. The origin of its name is now obvious!</p>
+
+<p><img src="/files/fig/staircase/staircase.jpg" alt="staircase diagram" title="Staircase Code Diagram" /></p>
+
+<p>To understand this diagram, we first define a <strong>component code</strong>, which is any systematic binary block code <script type="math/tex">\mathcal{C}</script> of length <script type="math/tex">n</script>, information bits <script type="math/tex">k</script>, and decoding radius <script type="math/tex">t</script>, denoted by <script type="math/tex">\mathcal{C}(n,k,t)</script>. We also assume that <script type="math/tex">\mathcal{C}</script> has a low-complexity decoding algorithm, for example, a syndrome decoder.</p>
+
+<p>First, we select <script type="math/tex">w=n</script> and arrange <script type="math/tex">w</script> copies of <script type="math/tex">\mathcal{C}</script>, row-by-row, within each consecutive pair of staircase blocks: <script type="math/tex">B_i</script>, <script type="math/tex">B_{i+1}</script>. Naturally, this requires that <script type="math/tex">n</script> is even.</p>
+
+<p>Initially, block <script type="math/tex">B_0</script> is filled with all-zero bits. Since this block carries no information, it is actually not transmitted.</p>
+
+<p>To encode the next block, arrange information (input) bits row-by-row into the white part of block <script type="math/tex">B_1</script>. Arrange blocks <script type="math/tex">B_0</script> and <script type="math/tex">B_1</script> into a <script type="math/tex">w \times 2w</script> matrix, encode each component code <script type="math/tex">\mathcal{C}</script> using its own systematic encoder. The resulting parity (or check) bits are used to populate the red part of block <script type="math/tex">B_1</script>. For subsequent blocks, given <script type="math/tex">B_{i-1}</script>, the matrix <script type="math/tex">B_{i-1}^T</script> and <script type="math/tex">B_i</script> is formed (<script type="math/tex">()^T</script> denotes matrix transpose) and the component code encoding proceeds as above.</p>
+
+<p>Since the red blocks do not carry information, the code rate of a staircase code is given by</p>
+
+<script type="math/tex; mode=display">\begin{equation*}
+R = \frac{w - (n-k)}{w} = 1 - 2(1  - k/n).
+\end{equation*}</script>
+
+<h1 id="decoding">Decoding</h1>
+
+<p>Staircase codes are decoded by using an iterative decoder, operating over several received blocks. Consider the above figure to be a set of 7 received blocks of bits from the BSC. The decoder will operate over these blocks, shift out a decoded block, and shift in a newly received block. Such a decoder is referred to as a <strong>sliding-window decoder</strong>.</p>
+
+<p>The iterative decoding process is similar to the encoding process. Consider a sliding window containing <script type="math/tex">W</script> blocks. For each <script type="math/tex">i \in \{0, \dots, W-2\}</script>, form the <script type="math/tex">w \times 2w</script> matrix <script type="math/tex">B_i^T, \, B_{i+1}</script> and decode each row of the matrix by an efficient component code decoder. For low decoding data-flow, a syndrome decoder is usually used. An iteration is completed when the end of the window is reached.</p>
+
+<p>This process is then repeated until either a maximum number of iterations has been reached or no bit-flips occur within the window. At the end of decoding, block <script type="math/tex">B_0</script> is decoded and removed from the window. A new block <script type="math/tex">B_W</script> is then shifted into the window. The process continues indefinitely.</p>
+
+<h2 id="a-c-simulator-for-staircase-codes">A C++ Simulator for Staircase Codes</h2>
+
+<p>If you are interested in trying out staircase codes as a possible error-correction solution, I have implemented a full simulator for staircase codes in C++, available at my <a href="https://github.com/leiz86/staircase-simulator">GitHub</a>.</p>
+
+<p>The only non-standard library that the simulator relies on is a <script type="math/tex">\textrm{BCH}(1023, 993, 7)</script> decoder implementation, currently compiled as a shared library on Linux (Ubuntu 16.04). The staircase code core implementation is fully modular and will be able to use any other component code decoder implementation with minor changes.</p>
+
+<p>The simulated bit-error rate (BER) and block error-rate (BKER) for a staircase code based on <script type="math/tex">\textrm{BCH}(1023, 993, 7)</script> (shortened by 1), with <script type="math/tex">w=511</script>, <script type="math/tex">W=7</script> and at most <script type="math/tex">6</script> decoding iterations, is shown in the figure below. The simulations were ran on a quad-core Intel Core I5-5200U CPU clocked at 2.20GHz, for around 40 minutes.</p>
+
+<p><img src="/files/fig/staircase/simulation.png" alt="simulation result" title="Simulation Results" /></p>
+
+<p>From the results, we observe that the transition between having a large number of decoding errors, i.e., little or no error correction, to virtually no decoding errors, is very sharp. This is known as a <strong>threshold</strong> of the BSC channel parameter, at which the state of the decoder undergoes a phase transition.</p>
+
+<p>Due to this sharp transition, it is difficult to fully observe the change in error rates around the threshold, especially given the computation power and run-time used to produce the above example plot. As a reference, the results reported in <a href="http://ieeexplore.ieee.org/document/6787025/">Staircase Codes With 6% to 33% Overhead</a> were simulated on a supercomputing cluster for over 3 months!</p>
+
+<p>For more details and extensive analysis of the threshold of staircase codes, please refer to the paper <a href="http://ieeexplore.ieee.org/document/8082562/">Spatially-Coupled Split-Component Codes with Iterative Algebraic Decoding</a>. Note that Spatially-Coupled Split-Component codes is a generalization of staircase codes.</p>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+  </script>
+  
+  
+
+  
+      <div id="disqus_thread"></div>
+    <script>
+
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://leiz86.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+                            
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Lei M. Zhang&#39;s Research Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              Lei M. Zhang&#39;s Research Blog
+            
+            </li>
+            
+            <li><a href="mailto:leiz86+blog@gmail.com">leiz86+blog@gmail.com</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/leiz86"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">leiz86</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>This is the research blog of Lei M. Zhang, PhD (ECE, U of Toronto).  Topics include deep learning, variational inference, graphical models,  information theory and coding theory. Enjoy!</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

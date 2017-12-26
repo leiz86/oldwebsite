@@ -1,4 +1,143 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-12-26T15:51:02-05:00</updated><id>http://localhost:4000/</id><title type="html">Lei M. Zhang’s Research Blog</title><subtitle>This is the research blog of Lei M. Zhang, PhD (ECE, U of Toronto).  Topics include deep learning, variational inference, graphical models,  information theory and coding theory. Enjoy!</subtitle><entry><title type="html">An Introduction to Staircase Codes</title><link href="http://localhost:4000/jekyll/update/2017/12/14/staircase.html" rel="alternate" type="text/html" title="An Introduction to Staircase Codes" /><published>2017-12-14T20:00:00-05:00</published><updated>2017-12-14T20:00:00-05:00</updated><id>http://localhost:4000/jekyll/update/2017/12/14/staircase</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/12/14/staircase.html">&lt;p&gt;In today’s post, I’d like to describe a class of error-correcting codes that have been the &lt;a href=&quot;http://ieeexplore.ieee.org/document/6787025/&quot;&gt;focus&lt;/a&gt; of my &lt;a href=&quot;http://ieeexplore.ieee.org/document/8082562/&quot;&gt;research&lt;/a&gt; &lt;a href=&quot;http://ieeexplore.ieee.org/document/7950925/&quot;&gt;career&lt;/a&gt; for the better part of the last 6 years. They are called &lt;a href=&quot;http://ieeexplore.ieee.org/document/6074908/&quot;&gt;Staircase Codes&lt;/a&gt; and were originally invented Professor Kschisching’s research group. There has been some recent interest in using staircase codes as efficient error-correcting codes for next-generation, long-haul fiber-optic communication networks.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-12-26T15:51:47-05:00</updated><id>http://localhost:4000/</id><title type="html">Lei M. Zhang’s Research Blog</title><subtitle>This is the research blog of Lei M. Zhang, PhD (ECE, U of Toronto).  Topics include deep learning, variational inference, graphical models,  information theory and coding theory. Enjoy!</subtitle><entry><title type="html">Concentration Inequalities and GAN Theory</title><link href="http://localhost:4000/jekyll/update/2017/12/26/concentration.html" rel="alternate" type="text/html" title="Concentration Inequalities and GAN Theory" /><published>2017-12-26T10:00:00-05:00</published><updated>2017-12-26T10:00:00-05:00</updated><id>http://localhost:4000/jekyll/update/2017/12/26/concentration</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/12/26/concentration.html">&lt;p&gt;In this post, I’d like to highlight one of my favorite new papers. In &lt;a href=&quot;https://arxiv.org/abs/1711.02651&quot;&gt;Theoretical Limitations of Encoder-Decoder GAN Architectures&lt;/a&gt; by Sanjeev Arora, Andrej Ristenski, and Yi Zhang (Nov 2017), the authors show an interesting &lt;strong&gt;negative&lt;/strong&gt; result regarding &lt;a href=&quot;https://arxiv.org/abs/1605.09782&quot;&gt;Encoder-Decoder GANs&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The key result of the paper is that an Encoder-Decoder (or Bi-directional) generative adversarial network (BiGAN) can have arbitrarily low training cost (i.e., appear arbitrarily good during training) but also be essentially useless (see &lt;a href=&quot;https://arxiv.org/abs/1711.02651&quot;&gt;Theorem 1&lt;/a&gt;). Useless here means that the encoder merely extracts noise from an input sample, while the generator has learned a distribution with small support (i.e., mode collapse).&lt;/p&gt;
+
+&lt;p&gt;It is worth to mention that in the proof of the main theorem, the authors used the techniques of defining probabilistic ensembles and applying concentration inequalities to their expectations and realizations.&lt;/p&gt;
+
+&lt;h2 id=&quot;ensembles-and-concentration&quot;&gt;Ensembles and Concentration&lt;/h2&gt;
+
+&lt;p&gt;These techniques are often used when a statement is difficult to prove for particular instances of a problem, but easy in aggregate. For this case, there are many possible different encoder and generator instances and their combinations.&lt;/p&gt;
+
+&lt;p&gt;The key idea is to consider all encoder/generator pairs together, i.e., to define an ensemble of encoders and generators using probability distributions. Their aggregate properties, such as an expectation with respect to an input (data) distribution, can then be found.&lt;/p&gt;
+
+&lt;p&gt;Once the expectation is found, it would be useful to know how far from the expected value a &lt;strong&gt;sample&lt;/strong&gt; of the ensemble will be. A &lt;strong&gt;concentration inequality&lt;/strong&gt; essentially provides a guarantee for the closeness of a sample of the ensemble to the expected value of the ensemble.&lt;/p&gt;
+
+&lt;p&gt;The Law of Large Numbers is a well-known expression of the idea of concentration. It is guaranteed, in the weak sense, by Tchebychev’s inequality.&lt;/p&gt;
+
+&lt;h2 id=&quot;concentration-inequalities-in-coding-theory&quot;&gt;Concentration Inequalities in Coding Theory&lt;/h2&gt;
+
+&lt;p&gt;These techniques are well-known and plays important roles in information theory and the theory of error-correcting codes. For example, they were used in &lt;a href=&quot;http://ieeexplore.ieee.org/document/8082562/&quot;&gt;Spatially-coupled Split-component Codes with Iterative Algebraic Decoding&lt;/a&gt;, to derive a method of analyzing the performance of the class of Spatially-coupled Split-component (SCSC) codes. They also played an instrumental part in the theory of &lt;a href=&quot;http://ieeexplore.ieee.org/abstract/document/910575/&quot;&gt;Low-Density Parity-Check&lt;/a&gt; &lt;a href=&quot;http://ieeexplore.ieee.org/abstract/document/910577/&quot;&gt;(LDPC) Codes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In the SCSC work, such codes are too numerous and too large (in terms of number of bits per codeword) to study individually. In order to determine the channel noise-level at which decoding success or fails, called the &lt;strong&gt;threshold&lt;/strong&gt; noise level, the following steps were required:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Define a graphical model for the class of SCSC codes&lt;/li&gt;
+  &lt;li&gt;Define an ensemble of graphs which models all possible SCSC codes with given parameters&lt;/li&gt;
+  &lt;li&gt;Calculate the threshold noise-level for the &lt;strong&gt;expected&lt;/strong&gt; decoder output bit-error probability (BER)&lt;/li&gt;
+  &lt;li&gt;Use concentration inequalities to prove that, as the length of codewords tends to infinity, any sample from the graph would have decoder output BER similar to the expected BER calculated in step 3.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Note that the expectation is taken over the random graph ensemble and channel noise samples. Calculating the probability of error for all codes and channel noise samples would be impractical, as in the case of BiGANS.&lt;/p&gt;
+
+&lt;p&gt;We used the concentration inequality known as &lt;a href=&quot;https://projecteuclid.org/euclid.aoap/1177004612&quot;&gt;Wormald’s Theorem&lt;/a&gt; was used. It is quite interesting as the method first finds a system of differential equations describing the evolution of the expected graph throughout a random edge-deletion process. The concentration guarantee is given for the solution of the differential equations. Hence, Wormald’s theorem is also known as the &lt;a href=&quot;https://www.cs.upc.edu/~diaz/papersd/DEM.pdf&quot;&gt;Differential Equations Method&lt;/a&gt;. For more details of the proof and technique, please refer to Chapter 4 of &lt;a href=&quot;http://hdl.handle.net/1807/79549&quot;&gt;Analysis and Design of Staircase Codes for High Bit-Rate
+Fibre-Optic Communication&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let’s now see a glimpse of the application of concentration inequalities for BiGANs.&lt;/p&gt;
+
+&lt;h2 id=&quot;encoder-decoder-bi-directional-gans&quot;&gt;Encoder-Decoder (Bi-directional) GANs&lt;/h2&gt;
+
+&lt;p&gt;Let &lt;script type=&quot;math/tex&quot;&gt;\mathbb{R}^d&lt;/script&gt; be the &lt;strong&gt;data space&lt;/strong&gt;, from which samples &lt;script type=&quot;math/tex&quot;&gt;x&lt;/script&gt; of a given data set is obtained. This could be the pixel space, for example. Let &lt;script type=&quot;math/tex&quot;&gt;\mathbb{R}^{d'}&lt;/script&gt; be the &lt;strong&gt;code space&lt;/strong&gt;, where elements &lt;script type=&quot;math/tex&quot;&gt;z&lt;/script&gt; of a latent code is obtained.&lt;/p&gt;
+
+&lt;p&gt;An encoder-decoder GAN architecture then simply aims to find maps &lt;script type=&quot;math/tex&quot;&gt;E : \mathbb{R}^d \mapsto \mathbb{R}^{d'}&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;G : \mathbb{R}^{d'} \mapsto \mathbb{R}^d&lt;/script&gt;, referred to as the encoder and decoder (or generator). Of course, there are many ways of finding them.&lt;/p&gt;
+
+&lt;p&gt;Generative adversarial networks (GANs) is one way of finding &lt;script type=&quot;math/tex&quot;&gt;E(x)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;G(z)&lt;/script&gt; that does not involve explicit probability calculations. To use GAN in this case, a discriminator network &lt;script type=&quot;math/tex&quot;&gt;D : \mathbb{R}^{d} \times \mathbb{R}^{d'} \mapsto \mathbb{R}&lt;/script&gt; is used to distinguish the distributions of the pairs &lt;script type=&quot;math/tex&quot;&gt;(x, E(x))&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;(G(z), z)&lt;/script&gt;. If the generative network has learned the joint distribution over data and code spaces &lt;script type=&quot;math/tex&quot;&gt;p(x,z)&lt;/script&gt;, then &lt;script type=&quot;math/tex&quot;&gt;D&lt;/script&gt; should not be able to distinguish between samples &lt;script type=&quot;math/tex&quot;&gt;(x, E(x))&lt;/script&gt; (i.e., data sample &lt;script type=&quot;math/tex&quot;&gt;x&lt;/script&gt; and its codeword) and &lt;script type=&quot;math/tex&quot;&gt;(G(z), z)&lt;/script&gt; (i.e., generated sample and its codeword).&lt;/p&gt;
+
+&lt;p&gt;The objective function is then&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation*}
+\min_{G, E} \max_D \left| \mathbb{E}_{x\sim\mu} \phi( D(x, E(x)) ) - \mathbb{E}_{z\sim\nu} \phi( D(G(z), z)) ) \right|,
+\end{equation*}&lt;/script&gt;
+
+&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\nu&lt;/script&gt; are data and code distributions, &lt;script type=&quot;math/tex&quot;&gt;\phi&lt;/script&gt; is some concave function (such as log), assumed to have outputs in the range &lt;script type=&quot;math/tex&quot;&gt;[-\Delta,\Delta]&lt;/script&gt; for some &lt;script type=&quot;math/tex&quot;&gt;\Delta \geq 1&lt;/script&gt; and is &lt;script type=&quot;math/tex&quot;&gt;L_{\phi}&lt;/script&gt;-&lt;a href=&quot;https://en.wikipedia.org/wiki/Lipschitz_continuity&quot;&gt;Lipschitz&lt;/a&gt; (&lt;script type=&quot;math/tex&quot;&gt;L_{\phi}&lt;/script&gt; is a constant. This is a continuity requirement from the concentration inequality).&lt;/p&gt;
+
+&lt;h3 id=&quot;the-main-theorem&quot;&gt;The main theorem&lt;/h3&gt;
+
+&lt;p&gt;For &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt; of support &lt;script type=&quot;math/tex&quot;&gt;m \triangleq p\Delta^2\log(p\Delta L L_{\phi} / \epsilon)^2 / \epsilon^2&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;E&lt;/script&gt; with at most &lt;script type=&quot;math/tex&quot;&gt;d'&lt;/script&gt; non-zero weights, and all discriminators &lt;script type=&quot;math/tex&quot;&gt;D&lt;/script&gt; that are &lt;script type=&quot;math/tex&quot;&gt;L&lt;/script&gt;-Lipschitz (&lt;script type=&quot;math/tex&quot;&gt;L&lt;/script&gt;, like &lt;script type=&quot;math/tex&quot;&gt;L_{\phi}&lt;/script&gt;, is a constant) and has &lt;script type=&quot;math/tex&quot;&gt;p&lt;/script&gt; parameters, with probability &lt;script type=&quot;math/tex&quot;&gt;1 - \exp(-\Omega(p\log(\Delta/\epsilon)))&lt;/script&gt;:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation}\label{eqn:theorem1}
+\left| \mathbb{E}_{x\sim\mu}\phi(D(x,E(x))) - \mathbb{E}_{z\sim\nu}\phi(D(G(z),z)) \right| \leq \epsilon.
+\end{equation}&lt;/script&gt;
+
+&lt;p&gt;In the following, we only focus on the concentration proof for the generator. The authors also construct the encoder ensemble in an interesting way that is and well-worth taking a look.&lt;/p&gt;
+
+&lt;h2 id=&quot;concentration-of-good-generators&quot;&gt;Concentration of Good Generators&lt;/h2&gt;
+
+&lt;h3 id=&quot;definitions-and-notation&quot;&gt;Definitions and Notation&lt;/h3&gt;
+
+&lt;p&gt;The technical theorem requires a brief introduction of new notation and concepts. Most of the notation is from the original paper, with minor simplifications.&lt;/p&gt;
+
+&lt;p&gt;The idea here is to first build a probabilistic model for &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt;, i.e., to consider every &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt; of small support to be sampled from an ensemble according to some probability distribution.&lt;/p&gt;
+
+&lt;p&gt;To do so, first partition &lt;script type=&quot;math/tex&quot;&gt;\mathbb{R}^{d'}&lt;/script&gt; into &lt;script type=&quot;math/tex&quot;&gt;m&lt;/script&gt; blocks with equal probability as given by the code distribution &lt;script type=&quot;math/tex&quot;&gt;\nu&lt;/script&gt;. Then, sample &lt;script type=&quot;math/tex&quot;&gt;m&lt;/script&gt; samples &lt;script type=&quot;math/tex&quot;&gt;x_1^*, x_2^*,\dots,x_m^*&lt;/script&gt; from the data distribution. The randomness in choosing these samples from the data space is what allows &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt; to be a random variable.&lt;/p&gt;
+
+&lt;p&gt;Given &lt;script type=&quot;math/tex&quot;&gt;z&lt;/script&gt; from the code space, let &lt;script type=&quot;math/tex&quot;&gt;i(z) \in \{1,\dots, m\}&lt;/script&gt; be the index of the partition in which &lt;script type=&quot;math/tex&quot;&gt;z&lt;/script&gt; lies. The generator is defined as &lt;script type=&quot;math/tex&quot;&gt;G(z) \triangleq x_{i(z)}^* \otimes z&lt;/script&gt; where &lt;script type=&quot;math/tex&quot;&gt;\otimes&lt;/script&gt; is some masking function. In other words, the generator simply selects the sampled image associated with the partition for &lt;script type=&quot;math/tex&quot;&gt;z&lt;/script&gt; and masks it.&lt;/p&gt;
+
+&lt;p&gt;Finally, we call &lt;script type=&quot;math/tex&quot;&gt;z_i&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;z_j&lt;/script&gt; non-colliding if &lt;script type=&quot;math/tex&quot;&gt;i(z_i) \neq i(z_j)&lt;/script&gt;. A set &lt;script type=&quot;math/tex&quot;&gt;T = \{z_1,\dots,z_m\}&lt;/script&gt; is non-colliding if all pairs in the set are non-colliding. Let &lt;script type=&quot;math/tex&quot;&gt;\mathcal{T}&lt;/script&gt; denote the distribution over non-colliding sets, such that each &lt;script type=&quot;math/tex&quot;&gt;z_i&lt;/script&gt; is sampled independently from the conditional distribution of &lt;script type=&quot;math/tex&quot;&gt;\nu&lt;/script&gt; inside the &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt;-th partition.&lt;/p&gt;
+
+&lt;h3 id=&quot;many-expectations&quot;&gt;Many Expectations&lt;/h3&gt;
+
+&lt;p&gt;Recall that property that we want to show is for (&lt;script type=&quot;math/tex&quot;&gt;\ref{eqn:theorem1}&lt;/script&gt;) to be arbitrarily small. For the generator, we are then interested in evaluating&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation}\label{eqn:expectation}
+\mathbb{E}_{z\sim\nu}\phi(D(G(z),z)).
+\end{equation}&lt;/script&gt;
+
+&lt;p&gt;Note that since &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt; is now a random variable, this expectation is also a random variable.&lt;/p&gt;
+
+&lt;p&gt;Now, the key expectation here is&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation*}
+\mathbb{E}_G \mathbb{E}_{z\sim\nu} \phi( D( G(z), z) ),
+\end{equation*}&lt;/script&gt;
+
+&lt;p&gt;which is shown in the paper to be equal to (&lt;script type=&quot;math/tex&quot;&gt;\ref{eqn:expectation}&lt;/script&gt;). The task remaining is to show the concentration of (&lt;script type=&quot;math/tex&quot;&gt;\ref{eqn:expectation}&lt;/script&gt;) to its expectation under the distribution of &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;Note that there are two sources of randomness, namely &lt;script type=&quot;math/tex&quot;&gt;\nu&lt;/script&gt;, the distribtuion over &lt;script type=&quot;math/tex&quot;&gt;z&lt;/script&gt;, and some distribution over &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt;. This is similar to the case analyzed in my PhD work, where the two sources of random are randomly graphical models of SCSC codes and channel noise samples.&lt;/p&gt;
+
+&lt;h3 id=&quot;concentration&quot;&gt;Concentration&lt;/h3&gt;
+
+&lt;p&gt;Using the idea of non-colliding sets and their distribution &lt;script type=&quot;math/tex&quot;&gt;\mathcal{T}&lt;/script&gt;, the paper shows that (&lt;script type=&quot;math/tex&quot;&gt;\ref{eqn:expectation}&lt;/script&gt;) is equivalent to&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation*}
+\mathbb{E}_{T \sim \mathcal{T}} \mathbb{E}_{z \sim T} \phi ( D(G(z), z)),
+\end{equation*}&lt;/script&gt;
+
+&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;\mathbb{E}_{z \sim T}&lt;/script&gt; is sample mean over the elements in &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;This trick essentially provides an easier way to handle the randomness in &lt;script type=&quot;math/tex&quot;&gt;z&lt;/script&gt;, since fixing &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; means samples &lt;script type=&quot;math/tex&quot;&gt;z_i&lt;/script&gt; are non-colliding, independent, and has equal probability under &lt;script type=&quot;math/tex&quot;&gt;\nu&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;The authors then consider &lt;script type=&quot;math/tex&quot;&gt;D&lt;/script&gt; to be fixed and note that the random variables in the function&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation*}
+\mathbb{E}_{z \sim T} \phi( D( G(z), z) ) \triangleq f(x_1^*, \dots, x_m^*, z_1, \dots, z_m)
+\end{equation*}&lt;/script&gt;
+
+&lt;p&gt;are all independent. Hence, the concentration inequality called &lt;a href=&quot;https://people.eecs.berkeley.edu/~bartlett/courses/281b-sp08/13.pdf&quot;&gt;McDiarmid’s Inequality&lt;/a&gt; (MI) can be used to guarantee concentration.&lt;/p&gt;
+
+&lt;p&gt;McDiarmid’s Inequality has the following two conditions:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Independence: the random variable is dependent only on mutually independent random variables&lt;/li&gt;
+  &lt;li&gt;Bounded differences, given by&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation*}
+\sup_{x_1,\dots, x_n, \hat{x}_i} | f(x_1, \dots, x_n) - f(x_1, \dots, x_{i-1}, \hat{x}_i, x_{i+1}, \dots, x_n) | \leq c_i,
+\end{equation*}&lt;/script&gt;
+
+&lt;p&gt;for &lt;script type=&quot;math/tex&quot;&gt;1 \leq i \leq n&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;The first condition is satisfied by the setup of &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt;. The second condition is also verified by the author, with the bound given by &lt;script type=&quot;math/tex&quot;&gt;1 / m&lt;/script&gt;. Note that this is part of the reason for the complicated expression of &lt;script type=&quot;math/tex&quot;&gt;m&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;Applying &lt;strong&gt;McDiarmid’s Inequality&lt;/strong&gt;, we have the result:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation*}
+\textrm{Pr}_{T,G}( |f(x_i^*, z_i) - \mathbb{E}_{T,G} f(x_i^*, z_i) | ) \leq \exp(-\Omega(m\epsilon^2)),
+\end{equation*}&lt;/script&gt;
+
+&lt;p&gt;where we abbreviated the notation of &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;From here, there are just a couple of more steps to the final generator concentration result using an epsilon-net / union bound argument and applications of another simple concentration inequality called Markov’s inequality.&lt;/p&gt;</content><author><name>Lei M. Zhang</name></author><summary type="html">In this post, I’d like to highlight one of my favorite new papers. In Theoretical Limitations of Encoder-Decoder GAN Architectures by Sanjeev Arora, Andrej Ristenski, and Yi Zhang (Nov 2017), the authors show an interesting negative result regarding Encoder-Decoder GANs.</summary></entry><entry><title type="html">An Introduction to Staircase Codes</title><link href="http://localhost:4000/jekyll/update/2017/12/14/staircase.html" rel="alternate" type="text/html" title="An Introduction to Staircase Codes" /><published>2017-12-14T20:00:00-05:00</published><updated>2017-12-14T20:00:00-05:00</updated><id>http://localhost:4000/jekyll/update/2017/12/14/staircase</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/12/14/staircase.html">&lt;p&gt;In today’s post, I’d like to describe a class of error-correcting codes that have been the &lt;a href=&quot;http://ieeexplore.ieee.org/document/6787025/&quot;&gt;focus&lt;/a&gt; of my &lt;a href=&quot;http://ieeexplore.ieee.org/document/8082562/&quot;&gt;research&lt;/a&gt; &lt;a href=&quot;http://ieeexplore.ieee.org/document/7950925/&quot;&gt;career&lt;/a&gt; for the better part of the last 6 years. They are called &lt;a href=&quot;http://ieeexplore.ieee.org/document/6074908/&quot;&gt;Staircase Codes&lt;/a&gt; and were originally invented Professor Kschisching’s research group. There has been some recent interest in using staircase codes as efficient error-correcting codes for next-generation, long-haul fiber-optic communication networks.&lt;/p&gt;
 
 &lt;p&gt;I have implemented a staircase code simulator in C++, available at my &lt;a href=&quot;https://github.com/leiz86/staircase-simulator&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 
