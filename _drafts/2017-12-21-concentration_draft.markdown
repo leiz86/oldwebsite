@@ -28,16 +28,16 @@ The Law of Large Numbers is a well-known expression of the idea of concentration
 
 These techniques are well-known and plays important roles in information theory and the theory of error-correcting codes. For example, they were used in [Spatially-coupled Split-component Codes with Iterative Algebraic Decoding](http://ieeexplore.ieee.org/document/8082562/), to derive a method of analyzing the performance of the class of Spatially-coupled Split-component (SCSC) codes. They also played an instrumental part in the theory of [Low-Density Parity-Check](http://ieeexplore.ieee.org/abstract/document/910575/) [(LDPC) Codes](http://ieeexplore.ieee.org/abstract/document/910577/).
 
-As in the case of BiGANs, such codes are too numerous and too large (in terms of number of bits per codeword) to study individually. In order to determine the channel noise-level at which decoding success or fails, called the **threshold** noise level, the following steps are required:
+In the SCSC work, such codes are too numerous and too large (in terms of number of bits per codeword) to study individually. In order to determine the channel noise-level at which decoding success or fails, called the **threshold** noise level, the following steps were required:
 
 1. Define a graphical model for the class of SCSC codes
 2. Define an ensemble of graphs which models all possible SCSC codes with given parameters
 3. Calculate the threshold noise-level for the **expected** decoder output bit-error probability (BER)
 4. Use concentration inequalities to prove that, as the length of codewords tends to infinity, any sample from the graph would have decoder output BER similar to the expected BER calculated in step 3.
 
-Note that the expectation is taken over the graph ensemble and channel noise samples. Calculating the probability of error for all codes and channel noise samples would be impractical, as in the case of BiGANS above. 
+Note that the expectation is taken over the random graph ensemble and channel noise samples. Calculating the probability of error for all codes and channel noise samples would be impractical, as in the case of BiGANS. 
 
-A variant of the Azuma-Hoeffding inequality called [Wormald's Theorem](https://projecteuclid.org/euclid.aoap/1177004612) was used. It is quite interesting as the method first finds a system of differential equations describing the evolution of the expected graph throughout a random edge-deletion process. The concentration guarantee is given for the solution of the differential equations. Hence, Wormald's theorem is also known as the [Differential Equations Method](https://www.cs.upc.edu/~diaz/papersd/DEM.pdf). For more details of the proof and technique, please refer to Chapter 4 of [Analysis and Design of Staircase Codes for High Bit-Rate
+We used the concentration inequality known as [Wormald's Theorem](https://projecteuclid.org/euclid.aoap/1177004612) was used. It is quite interesting as the method first finds a system of differential equations describing the evolution of the expected graph throughout a random edge-deletion process. The concentration guarantee is given for the solution of the differential equations. Hence, Wormald's theorem is also known as the [Differential Equations Method](https://www.cs.upc.edu/~diaz/papersd/DEM.pdf). For more details of the proof and technique, please refer to Chapter 4 of [Analysis and Design of Staircase Codes for High Bit-Rate
 Fibre-Optic Communication](http://hdl.handle.net/1807/79549).
 
 Let's now see a glimpse of the application of concentration inequalities for BiGANs.
@@ -70,7 +70,7 @@ $$
 \end{equation}
 $$ 
 
-In the following, we only focus on the concentration proof for the generator. The authors also construct the encoder ensemble in an interesting way that is and well-worth reading! 
+In the following, we only focus on the concentration proof for the generator. The authors also construct the encoder ensemble in an interesting way that is and well-worth taking a look.
 
 ## Concentration of Good Generators
 
