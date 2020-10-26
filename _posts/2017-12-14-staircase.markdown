@@ -10,7 +10,7 @@ author: Lei M. Zhang
 
 In today's post, I'd like to describe a class of error-correcting codes that have been the [focus](http://ieeexplore.ieee.org/document/6787025/) of my [research](http://ieeexplore.ieee.org/document/8082562/) [career](http://ieeexplore.ieee.org/document/7950925/) for the better part of the last 6 years. They are called [Staircase Codes](http://ieeexplore.ieee.org/document/6074908/) and were originally invented Professor Kschisching's research group. There has been some recent interest in using staircase codes as efficient error-correcting codes for next-generation, long-haul fiber-optic communication networks.
 
-I have implemented a staircase code simulator in C++, available at my [GitHub](https://github.com/leiz86/staircase-simulator).
+I have implemented a staircase code simulator in C++, available at my [GitHub](https://github.com/leiz86/staircase_code_simulator).
 
 ## What is an error-correcting code?
 
