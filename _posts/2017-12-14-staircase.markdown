@@ -74,7 +74,7 @@ This process is then repeated until either a maximum number of iterations has be
 
 ## A C++ Simulator for Staircase Codes
 
-If you are interested in trying out staircase codes as a possible error-correction solution, I have implemented a full simulator for staircase codes in C++, available at my [GitHub](https://github.com/leiz86/staircase-simulator). 
+If you are interested in trying out staircase codes as a possible error-correction solution, I have implemented a full simulator for staircase codes in C++, available at my [GitHub](https://github.com/leiz86/staircase_code_simulator). 
 
 The only non-standard library that the simulator relies on is a $$\textrm{BCH}(1023, 993, 7)$$ decoder implementation, currently compiled as a shared library on Linux (Ubuntu 16.04). The staircase code core implementation is fully modular and will be able to use any other component code decoder implementation with minor changes.  
 
